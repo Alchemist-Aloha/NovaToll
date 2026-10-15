@@ -1,0 +1,26 @@
+import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';
+const ids={};for(const id of ['test','status','details','download','summary'])ids['browser66-'+id]={};
+let fetchImpl,requests=[],timerCallback,blobURLRevoked=false;
+const ctx={document:{getElementById:id=>ids[id],createElement:()=>({click(){}})},AbortController,TextDecoder,Date,JSON,Blob,Intl,URLSearchParams,URL:{createObjectURL:()=> 'blob:test',revokeObjectURL:()=>blobURLRevoked=true},setTimeout:callback=>{timerCallback=callback;return 1;},clearTimeout(){},fetch:async(...args)=>{requests.push(args);return fetchImpl(...args);}};
+vm.createContext(ctx);vm.runInContext(fs.readFileSync(new URL('../ui/browser66.js',import.meta.url),'utf8').replace('/*OUTSIDE66*/{}',fs.readFileSync(new URL('../ui/outside66.json',import.meta.url),'utf8')),ctx);
+const run=s=>vm.runInContext(s,ctx),route={entry:'415',gantries:'420,423,425',label:'Test route'};ctx.route=route;
+const row=(id,amount,end='2026-10-15T06:00:00Z')=>({rateEndDate:end,gantry:{gantryId:id,vehicleClasses:[{rateAmountTag:amount}]}});
+const payload={success:true,data:{curl_response:{rates:[row('415','1.50'),row('415','9.50','2026-10-14T00:00:00Z'),row('420','2.25'),row('423','3.00'),row('425','4.00'),row('999','99')]}}};ctx.payload=payload;
+assert.equal(requests.length,0,'No external request on startup');
+let q=run('outside66Amount(payload,route)');assert.equal(q.price,10.75);assert.equal(q.components.length,4);
+ctx.same={entry:'415',gantries:'415'};assert.equal(run('outside66Amount(payload,same)').price,1.5,'Same gantry counted once');
+const form=run('outside66Form(route)');assert.equal(form.get('action'),'api_call');assert.equal(form.get('data[ending_gantry_id]'),'425');assert.equal(form.get('data[middle_ending_gantry_id]'),'423');assert.equal(form.get('data[first_ending_gantry_id]'),'420');assert.equal(form.get('data[xvWr]'),'1');
+assert.equal(run("outside66Route({road:'495',dir:'Southbound',exit:'66w:28'}).entry"),'414');assert.equal(run("outside66Route({road:'495',dir:'Northbound',exit:'66w:50'}).gantries"),'415');
+assert.throws(()=>run("outside66Form({entry:'999',gantries:'420'})"),/Unknown/);
+for(const bad of [null,'',-1,'invalid']){ctx.bad={success:true,data:{curl_response:{rates:[row('415',bad)]}}};assert.throws(()=>run('outside66Amount(bad,same)'),/invalid toll/);}
+ctx.bad={success:true,data:{curl_response:{rates:[row('415',0)]}}};assert.equal(run('outside66Amount(bad,same)').price,0,'Operator zero retained');
+assert.throws(()=>run('outside66Amount(bad,route)'),/missing/);ctx.bad={data:{curl_response:{rates:[row('415',1,'invalid')]}}};assert.throws(()=>run('outside66Amount(bad,same)'),/timestamp/);
+fetchImpl=async()=>Response.json(payload);await run('fetchOutside66(route)');assert.equal(requests[0][0],'https://ride66express.com/wp-content/themes/i66/theme-ajax.php');assert.equal(requests[0][1].method,'POST');assert.equal(requests[0][1].credentials,'omit');assert.equal(requests[0][1].mode,'cors');assert.equal(requests[0][1].referrerPolicy,'no-referrer');assert.equal(requests[0][1].headers,undefined,'No custom header/preflight requirement');assert.equal(run('browser66Report.version'),3);assert.equal(run('browser66Report.livePriceVerified'),false);
+ids['browser66-download'].onclick();timerCallback();assert.ok(blobURLRevoked);
+fetchImpl=async()=>new Response('Request blocked',{status:403});await assert.rejects(run('fetchOutside66(route)'),/HTTP 403/);
+fetchImpl=async()=>new Response('<html>Sign in</html>');await assert.rejects(run('fetchOutside66(route)'),/instead of pricing JSON/);
+fetchImpl=async()=>{throw new TypeError('Failed to fetch');};await assert.rejects(run('fetchOutside66(route)'),/CORS, networking/);assert.equal(run('browser66Report.body'),undefined);
+fetchImpl=async(_,options)=>{timerCallback();assert.ok(options.signal.aborted);throw Error('Aborted');};await assert.rejects(run('fetchOutside66(route)'),/timed out/);
+fetchImpl=async()=>new Response('Too large',{headers:{'Content-Length':'2000001'}});await assert.rejects(run('fetchOutside66(route)'),/2 MB/);
+let finish;fetchImpl=async()=>new Promise(resolve=>finish=()=>resolve(Response.json(payload)));const pending=ids['browser66-test'].onclick(),before=requests.length;await ids['browser66-test'].onclick();assert.equal(requests.length,before);finish();await pending;assert.equal(ids['browser66-test'].disabled,false);assert.match(ids['browser66-status'].textContent,/3.75/);
+console.log('Outside I-66 checks passed: exact POST contract, latest rates, multi-gantry sum, deduplication, strict missing/invalid/zero handling, report and errors.');

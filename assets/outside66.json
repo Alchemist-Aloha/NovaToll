@@ -1,0 +1,826 @@
+{
+  "Eastbound": [
+    {
+      "id": "401",
+      "label": "Western Entry",
+      "exits": [
+        {
+          "gantries": "401",
+          "label": "Walney Rd/Rt28"
+        },
+        {
+          "gantries": "401",
+          "label": "GP Exit/Fairfax County Pkwy"
+        },
+        {
+          "gantries": "407",
+          "label": "Monument Dr"
+        },
+        {
+          "gantries": "407",
+          "label": "Chain Bridge Rd"
+        },
+        {
+          "gantries": "407,411",
+          "label": "Vaden Dr"
+        },
+        {
+          "gantries": "407,411",
+          "label": "I-495 NB General Purpose"
+        },
+        {
+          "gantries": "407,411",
+          "label": "I-495 Express Lanes (NB & SB)"
+        },
+        {
+          "gantries": "407,411",
+          "label": "I-495 SB General Purpose"
+        },
+        {
+          "gantries": "407,411",
+          "label": "EB GP Exit"
+        }
+      ]
+    },
+    {
+      "id": "402",
+      "label": "University Boulevard",
+      "exits": [
+        {
+          "gantries": "402",
+          "label": "Walney Rd/Rt28"
+        },
+        {
+          "gantries": "402",
+          "label": "GP Exit/Fairfax County Pkwy"
+        },
+        {
+          "gantries": "407",
+          "label": "Monument Dr"
+        },
+        {
+          "gantries": "407",
+          "label": "Chain Bridge Rd"
+        },
+        {
+          "gantries": "407,411",
+          "label": "Vaden Dr"
+        },
+        {
+          "gantries": "407,411",
+          "label": "I-495 NB General Purpose"
+        },
+        {
+          "gantries": "407,411",
+          "label": "I-495 Express Lanes (NB & SB)"
+        },
+        {
+          "gantries": "407,411",
+          "label": "I-495 SB General Purpose"
+        },
+        {
+          "gantries": "407,411",
+          "label": "EB GP Exit"
+        }
+      ]
+    },
+    {
+      "id": "403",
+      "label": "Century Park/Balls Ford",
+      "exits": [
+        {
+          "gantries": "403",
+          "label": "Walney Rd/Rt28"
+        },
+        {
+          "gantries": "403",
+          "label": "GP Exit/Fairfax County Pkwy"
+        },
+        {
+          "gantries": "407",
+          "label": "Monument Dr"
+        },
+        {
+          "gantries": "407",
+          "label": "Chain Bridge Rd"
+        },
+        {
+          "gantries": "407,411",
+          "label": "Vaden Dr"
+        },
+        {
+          "gantries": "407,411",
+          "label": "I-495 NB General Purpose"
+        },
+        {
+          "gantries": "407,411",
+          "label": "I-495 Express Lanes (NB & SB)"
+        },
+        {
+          "gantries": "407,411",
+          "label": "I-495 SB General Purpose"
+        },
+        {
+          "gantries": "407,411",
+          "label": "EB GP Exit"
+        }
+      ]
+    },
+    {
+      "id": "404",
+      "label": "EB Slip Ramp Sudley Road",
+      "exits": [
+        {
+          "gantries": "404",
+          "label": "Walney Rd/Rt28"
+        },
+        {
+          "gantries": "404",
+          "label": "GP Exit/Fairfax County Pkwy"
+        },
+        {
+          "gantries": "407",
+          "label": "Monument Dr"
+        },
+        {
+          "gantries": "407",
+          "label": "Chain Bridge Rd"
+        },
+        {
+          "gantries": "407,411",
+          "label": "Vaden Dr"
+        },
+        {
+          "gantries": "407,411",
+          "label": "I-495 NB General Purpose"
+        },
+        {
+          "gantries": "407,411",
+          "label": "I-495 Express Lanes (NB & SB)"
+        },
+        {
+          "gantries": "407,411",
+          "label": "I-495 SB General Purpose"
+        },
+        {
+          "gantries": "407,411",
+          "label": "EB GP Exit"
+        }
+      ]
+    },
+    {
+      "id": "400",
+      "label": "Sudley Road",
+      "exits": [
+        {
+          "gantries": "400",
+          "label": "Walney Rd/Rt28"
+        },
+        {
+          "gantries": "400",
+          "label": "GP Exit/Fairfax County Pkwy"
+        },
+        {
+          "gantries": "407",
+          "label": "Monument Dr"
+        },
+        {
+          "gantries": "407",
+          "label": "Chain Bridge Rd"
+        },
+        {
+          "gantries": "407,411",
+          "label": "Vaden Dr"
+        },
+        {
+          "gantries": "407,411",
+          "label": "I-495 NB General Purpose"
+        },
+        {
+          "gantries": "407,411",
+          "label": "I-495 Express Lanes (NB & SB)"
+        },
+        {
+          "gantries": "407,411",
+          "label": "I-495 SB General Purpose"
+        },
+        {
+          "gantries": "407,411",
+          "label": "EB GP Exit"
+        }
+      ]
+    },
+    {
+      "id": "405",
+      "label": "EB Slip Ramp Rt 28",
+      "exits": [
+        {
+          "gantries": "405",
+          "label": "GP Exit/Fairfax County Pkwy"
+        },
+        {
+          "gantries": "407",
+          "label": "Monument Dr"
+        },
+        {
+          "gantries": "407",
+          "label": "Chain Bridge Rd"
+        },
+        {
+          "gantries": "407,411",
+          "label": "Vaden Dr"
+        },
+        {
+          "gantries": "407,411",
+          "label": "I-495 NB General Purpose"
+        },
+        {
+          "gantries": "407,411",
+          "label": "I-495 Express Lanes (NB & SB)"
+        },
+        {
+          "gantries": "407,411",
+          "label": "I-495 SB General Purpose"
+        },
+        {
+          "gantries": "407,411",
+          "label": "EB GP Exit"
+        }
+      ]
+    },
+    {
+      "id": "406",
+      "label": "Rt 28 SB",
+      "exits": [
+        {
+          "gantries": "406",
+          "label": "GP Exit/Fairfax County Pkwy"
+        },
+        {
+          "gantries": "407",
+          "label": "Monument Dr"
+        },
+        {
+          "gantries": "407",
+          "label": "Chain Bridge Rd"
+        },
+        {
+          "gantries": "407,411",
+          "label": "Vaden Dr"
+        },
+        {
+          "gantries": "407,411",
+          "label": "I-495 NB General Purpose"
+        },
+        {
+          "gantries": "407,411",
+          "label": "I-495 Express Lanes (NB & SB)"
+        },
+        {
+          "gantries": "407,411",
+          "label": "I-495 SB General Purpose"
+        },
+        {
+          "gantries": "407,411",
+          "label": "EB GP Exit"
+        }
+      ]
+    },
+    {
+      "id": "408",
+      "label": "Stringfellow Rd",
+      "exits": [
+        {
+          "gantries": "408",
+          "label": "Monument Dr"
+        },
+        {
+          "gantries": "408",
+          "label": "Chain Bridge Rd"
+        },
+        {
+          "gantries": "408",
+          "label": "Vaden Dr"
+        },
+        {
+          "gantries": "411",
+          "label": "I-495 NB General Purpose"
+        },
+        {
+          "gantries": "411",
+          "label": "I-495 Express Lanes (NB & SB)"
+        },
+        {
+          "gantries": "411",
+          "label": "I-495 SB General Purpose"
+        },
+        {
+          "gantries": "411",
+          "label": "EB GP Exit"
+        }
+      ]
+    },
+    {
+      "id": "409",
+      "label": "EB Monument Drive",
+      "exits": [
+        {
+          "gantries": "409",
+          "label": "Chain Bridge Rd"
+        },
+        {
+          "gantries": "411",
+          "label": "Vaden Dr"
+        },
+        {
+          "gantries": "411",
+          "label": "I-495 NB General Purpose"
+        },
+        {
+          "gantries": "411",
+          "label": "I-495 Express Lanes (NB & SB)"
+        },
+        {
+          "gantries": "411",
+          "label": "I-495 SB General Purpose"
+        },
+        {
+          "gantries": "411",
+          "label": "EB GP Exit"
+        }
+      ]
+    },
+    {
+      "id": "410",
+      "label": "US-50 EB",
+      "exits": [
+        {
+          "gantries": "410",
+          "label": "Chain Bridge Rd"
+        },
+        {
+          "gantries": "411",
+          "label": "Vaden Dr"
+        },
+        {
+          "gantries": "411",
+          "label": "I-495 NB General Purpose"
+        },
+        {
+          "gantries": "411",
+          "label": "I-495 Express Lanes (NB & SB)"
+        },
+        {
+          "gantries": "411",
+          "label": "I-495 SB General Purpose"
+        },
+        {
+          "gantries": "411",
+          "label": "EB GP Exit"
+        }
+      ]
+    },
+    {
+      "id": "411",
+      "label": "Chain Bridge Rd",
+      "exits": [
+        {
+          "gantries": "411",
+          "label": "I-495 NB General Purpose"
+        },
+        {
+          "gantries": "411",
+          "label": "I-495 Express Lanes (NB & SB)"
+        },
+        {
+          "gantries": "411",
+          "label": "I-495 SB General Purpose"
+        },
+        {
+          "gantries": "411",
+          "label": "EB GP Exit"
+        }
+      ]
+    },
+    {
+      "id": "412",
+      "label": "EB Braided Ramp",
+      "exits": [
+        {
+          "gantries": "412",
+          "label": "I-495 NB General Purpose"
+        },
+        {
+          "gantries": "412",
+          "label": "I-495 Express Lanes (NB & SB)"
+        },
+        {
+          "gantries": "412",
+          "label": "I-495 SB General Purpose"
+        },
+        {
+          "gantries": "412",
+          "label": "EB GP Exit"
+        }
+      ]
+    }
+  ],
+  "Westbound": [
+    {
+      "id": "417",
+      "label": "Eastern Entry",
+      "exits": [
+        {
+          "gantries": "417",
+          "label": "Chain Bridge Rd"
+        },
+        {
+          "gantries": "417",
+          "label": "US-50 EB"
+        },
+        {
+          "gantries": "420",
+          "label": "Monument Dr"
+        },
+        {
+          "gantries": "420",
+          "label": "Stringfellow Rd"
+        },
+        {
+          "gantries": "420",
+          "label": "GP Exit/Rt28 SB"
+        },
+        {
+          "gantries": "420",
+          "label": "Rt28 NB/Walney Rd/Braddock Rd"
+        },
+        {
+          "gantries": "420,423",
+          "label": "GP Exit/Sudley Rd"
+        },
+        {
+          "gantries": "420,423,425",
+          "label": "Century Park"
+        },
+        {
+          "gantries": "420,423,425",
+          "label": "University Blvd"
+        },
+        {
+          "gantries": "420,423,425",
+          "label": "WB GP Exit"
+        }
+      ]
+    },
+    {
+      "id": "416",
+      "label": "I-495 NB GP",
+      "exits": [
+        {
+          "gantries": "416",
+          "label": "Chain Bridge Rd"
+        },
+        {
+          "gantries": "416",
+          "label": "US-50 EB"
+        },
+        {
+          "gantries": "420",
+          "label": "Monument Dr"
+        },
+        {
+          "gantries": "420",
+          "label": "Stringfellow Rd"
+        },
+        {
+          "gantries": "420",
+          "label": "GP Exit/Rt28 SB"
+        },
+        {
+          "gantries": "420",
+          "label": "Rt28 NB/Walney Rd/Braddock Rd"
+        },
+        {
+          "gantries": "420,423",
+          "label": "GP Exit/Sudley Rd"
+        },
+        {
+          "gantries": "420,423,425",
+          "label": "Century Park"
+        },
+        {
+          "gantries": "420,423,425",
+          "label": "University Blvd"
+        },
+        {
+          "gantries": "420,423,425",
+          "label": "WB GP Exit"
+        }
+      ]
+    },
+    {
+      "id": "414",
+      "label": "I-495 SB EL",
+      "exits": [
+        {
+          "gantries": "414",
+          "label": "Chain Bridge Rd"
+        },
+        {
+          "gantries": "414",
+          "label": "US-50 EB"
+        },
+        {
+          "gantries": "420",
+          "label": "Monument Dr"
+        },
+        {
+          "gantries": "420",
+          "label": "Stringfellow Rd"
+        },
+        {
+          "gantries": "420",
+          "label": "GP Exit/Rt28 SB"
+        },
+        {
+          "gantries": "420",
+          "label": "Rt28 NB/Walney Rd/Braddock Rd"
+        },
+        {
+          "gantries": "420,423",
+          "label": "GP Exit/Sudley Rd"
+        },
+        {
+          "gantries": "420,423,425",
+          "label": "Century Park"
+        },
+        {
+          "gantries": "420,423,425",
+          "label": "University Blvd"
+        },
+        {
+          "gantries": "420,423,425",
+          "label": "WB GP Exit"
+        }
+      ]
+    },
+    {
+      "id": "413",
+      "label": "I-495 SB GP",
+      "exits": [
+        {
+          "gantries": "413",
+          "label": "Chain Bridge Rd"
+        },
+        {
+          "gantries": "413",
+          "label": "US-50 EB"
+        },
+        {
+          "gantries": "420",
+          "label": "Monument Dr"
+        },
+        {
+          "gantries": "420",
+          "label": "Stringfellow Rd"
+        },
+        {
+          "gantries": "420",
+          "label": "GP Exit/Rt28 SB"
+        },
+        {
+          "gantries": "420",
+          "label": "Rt28 NB/Walney Rd/Braddock Rd"
+        },
+        {
+          "gantries": "420,423",
+          "label": "GP Exit/Sudley Rd"
+        },
+        {
+          "gantries": "420,423,425",
+          "label": "Century Park"
+        },
+        {
+          "gantries": "420,423,425",
+          "label": "University Blvd"
+        },
+        {
+          "gantries": "420,423,425",
+          "label": "WB GP Exit"
+        }
+      ]
+    },
+    {
+      "id": "415",
+      "label": "I-495 NB EL",
+      "exits": [
+        {
+          "gantries": "415",
+          "label": "Chain Bridge Rd"
+        },
+        {
+          "gantries": "415",
+          "label": "US-50 EB"
+        },
+        {
+          "gantries": "420",
+          "label": "Monument Dr"
+        },
+        {
+          "gantries": "420",
+          "label": "Stringfellow Rd"
+        },
+        {
+          "gantries": "420",
+          "label": "GP Exit/Rt28 SB"
+        },
+        {
+          "gantries": "420",
+          "label": "Rt28 NB/Walney Rd/Braddock Rd"
+        },
+        {
+          "gantries": "420,423",
+          "label": "GP Exit/Sudley Rd"
+        },
+        {
+          "gantries": "420,423,425",
+          "label": "Century Park"
+        },
+        {
+          "gantries": "420,423,425",
+          "label": "University Blvd"
+        },
+        {
+          "gantries": "420,423,425",
+          "label": "WB GP Exit"
+        }
+      ]
+    },
+    {
+      "id": "418",
+      "label": "Vaden Drive",
+      "exits": [
+        {
+          "gantries": "418",
+          "label": "Chain Bridge Rd"
+        },
+        {
+          "gantries": "418",
+          "label": "US-50 EB"
+        },
+        {
+          "gantries": "420",
+          "label": "Monument Dr"
+        },
+        {
+          "gantries": "420",
+          "label": "Stringfellow Rd"
+        },
+        {
+          "gantries": "420",
+          "label": "GP Exit/Rt28 SB"
+        },
+        {
+          "gantries": "420",
+          "label": "Rt28 NB/Walney Rd/Braddock Rd"
+        },
+        {
+          "gantries": "420,423",
+          "label": "GP Exit/Sudley Rd"
+        },
+        {
+          "gantries": "420,423,425",
+          "label": "Century Park"
+        },
+        {
+          "gantries": "420,423,425",
+          "label": "University Blvd"
+        },
+        {
+          "gantries": "420,423,425",
+          "label": "WB GP Exit"
+        }
+      ]
+    },
+    {
+      "id": "419",
+      "label": "WB Chain Bridge",
+      "exits": [
+        {
+          "gantries": "419",
+          "label": "US-50 EB"
+        },
+        {
+          "gantries": "420",
+          "label": "Monument Dr"
+        },
+        {
+          "gantries": "420",
+          "label": "Stringfellow Rd"
+        },
+        {
+          "gantries": "420",
+          "label": "GP Exit/Rt28 SB"
+        },
+        {
+          "gantries": "420",
+          "label": "Rt28 NB/Walney Rd/Braddock Rd"
+        },
+        {
+          "gantries": "420,423",
+          "label": "GP Exit/Sudley Rd"
+        },
+        {
+          "gantries": "420,423,425",
+          "label": "Century Park"
+        },
+        {
+          "gantries": "420,423,425",
+          "label": "University Blvd"
+        },
+        {
+          "gantries": "420,423,425",
+          "label": "WB GP Exit"
+        }
+      ]
+    },
+    {
+      "id": "421",
+      "label": "WB Monument Drive",
+      "exits": [
+        {
+          "gantries": "421",
+          "label": "Stringfellow Rd"
+        },
+        {
+          "gantries": "421",
+          "label": "GP Exit/Rt28 SB"
+        },
+        {
+          "gantries": "421",
+          "label": "Rt28 NB/Walney Rd/Braddock Rd"
+        },
+        {
+          "gantries": "423",
+          "label": "GP Exit/Sudley Rd"
+        },
+        {
+          "gantries": "423,425",
+          "label": "Century Park"
+        },
+        {
+          "gantries": "423,425",
+          "label": "University Blvd"
+        },
+        {
+          "gantries": "423,425",
+          "label": "WB GP Exit"
+        }
+      ]
+    },
+    {
+      "id": "423",
+      "label": "WB Cont Rt 28",
+      "exits": [
+        {
+          "gantries": "423",
+          "label": "GP Exit/Sudley Rd"
+        },
+        {
+          "gantries": "425",
+          "label": "Century Park"
+        },
+        {
+          "gantries": "425",
+          "label": "University Blvd"
+        },
+        {
+          "gantries": "425",
+          "label": "WB GP Exit"
+        }
+      ]
+    },
+    {
+      "id": "424",
+      "label": "Rt 28 SB/Braddock Road",
+      "exits": [
+        {
+          "gantries": "424",
+          "label": "GP Exit/Sudley Rd"
+        },
+        {
+          "gantries": "425",
+          "label": "Century Park"
+        },
+        {
+          "gantries": "425",
+          "label": "University Blvd"
+        },
+        {
+          "gantries": "425",
+          "label": "WB GP Exit"
+        }
+      ]
+    }
+  ]
+}

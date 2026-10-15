@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-14T20:42:49.934300+00:00",
+  "title": "Design System: Nova Toll",
+  "extensions": {
+    "colorMeta": {
+      "ink": {
+        "role": "primary",
+        "displayName": "Route Navy"
+      },
+      "coral": {
+        "role": "primary",
+        "displayName": "Passage Coral"
+      },
+      "teal": {
+        "role": "secondary",
+        "displayName": "Signal Teal"
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Warm Paper"
+      }
+    },
+    "typographyMeta": {
+      "body": {
+        "displayName": "DM Sans regular",
+        "purpose": "Self-hosted interface body and controls."
+      },
+      "display": {
+        "displayName": "Manrope bold",
+        "purpose": "Self-hosted headings and brand."
+      },
+      "amount": {
+        "displayName": "Manrope amount",
+        "purpose": "Tabular toll total, 48px on mobile."
+      }
+    },
+    "shadows": [
+      {
+        "name": "search-results",
+        "value": "0 8px 24px #172b4520",
+        "purpose": "Floating search results."
+      },
+      {
+        "name": "map-controls",
+        "value": "0 3px 10px #172b4517",
+        "purpose": "Zoom controls above artwork."
+      }
+    ],
+    "motion": [
+      {
+        "name": "tab-state",
+        "value": "background .18s, color .18s",
+        "purpose": "Enabled only without reduced motion."
+      },
+      {
+        "name": "panel-arrival",
+        "value": "arrive .22s ease-out; translateY(4px) to translateY(0)",
+        "purpose": "Enabled only without reduced motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "mobile",
+        "value": "800px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary action",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Explicit trip action.",
+      "html": "<button class=\"ds-button-primary\">View toll estimate</button>",
+      "css": ".ds-button-primary{font:16px/1.5 DM,Arial,sans-serif;border-radius:7px;padding:11px 14px;min-height:46px;cursor:pointer;background:var(--coral,#be4a35);border:1px solid var(--coral,#be4a35);color:#fffefa}.ds-button-primary:hover{background:#a33b2b}.ds-button-primary:focus-visible{outline:3px solid var(--focus,#ad422f);outline-offset:3px}.ds-button-primary:disabled{opacity:.55;cursor:default}"
+    },
+    {
+      "name": "Secondary action",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Explicit trip action.",
+      "html": "<button class=\"ds-button-secondary\">Refresh price</button>",
+      "css": ".ds-button-secondary{font:16px/1.5 DM,Arial,sans-serif;border-radius:7px;padding:11px 14px;min-height:46px;cursor:pointer;background:var(--ink,#172b45);border:1px solid var(--ink,#172b45);color:#fffefa}.ds-button-secondary:hover{background:#254364}.ds-button-secondary:focus-visible{outline:3px solid var(--focus,#ad422f);outline-offset:3px}.ds-button-secondary:disabled{opacity:.55;cursor:default}"
+    },
+    {
+      "name": "Route field",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Labeled native route selector.",
+      "html": "<label class=\"ds-label\" for=\"ds-road\">Starting highway</label><select class=\"ds-field\" id=\"ds-road\"><option>I-495 Express Lanes</option><option>I-95 Express Lanes</option></select>",
+      "css": ".ds-label{display:block;font:600 14px DM,Arial,sans-serif;color:var(--ink,#172b45);margin-bottom:7px}.ds-field{font:16px/1.5 DM,Arial,sans-serif;border-radius:7px;padding:11px 14px;min-height:46px;cursor:pointer;width:100%;background:var(--white,#fffefa);color:var(--ink,#172b45);border:1px solid #adb8bf}.ds-field:focus-visible{outline:3px solid var(--focus,#ad422f);outline-offset:3px}"
+    },
+    {
+      "name": "Task tabs",
+      "kind": "nav",
+      "refersTo": "tab-selected",
+      "description": "Exclusive Map, Manual / GPS, and Toll estimate panels.",
+      "html": "<nav class=\"ds-tabs\" aria-label=\"Trip planning panels\"><button aria-current=\"page\">Map</button><button>Manual / GPS</button><button>Toll estimate</button></nav>",
+      "css": ".ds-tabs{display:flex;gap:5px;background:#e6e5df;padding:5px;border-radius:10px}.ds-tabs button{font:600 14px DM,Arial,sans-serif;border:0;border-radius:7px;padding:10px 16px;min-height:46px;background:transparent;color:#536477;cursor:pointer}.ds-tabs button[aria-current]{background:#172b45;color:white}.ds-tabs button:hover{background:#e7eeeb;color:#172b45}.ds-tabs button:focus-visible{outline:3px solid var(--focus,#ad422f);outline-offset:3px}"
+    },
+    {
+      "name": "Estimate surface",
+      "kind": "card",
+      "refersTo": "form-panel",
+      "description": "Separate price review with qualified amount.",
+      "html": "<article class=\"ds-estimate\"><h2>Trip estimate</h2><div>$8.40</div><p>Current operator estimate \u00b7 check rate timestamp</p></article>",
+      "css": ".ds-estimate{padding:28px;border:1px solid #d7dddf;border-radius:12px;background:#fffefa;color:#172b45;font:16px/1.5 DM,Arial,sans-serif}.ds-estimate h2{font:700 24px Manrope,DM,sans-serif;margin:0 0 12px}.ds-estimate div{font:700 48px/1.15 Manrope,DM,sans-serif;font-variant-numeric:tabular-nums;letter-spacing:-.04em}.ds-estimate p{font-size:13px;color:#536477}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Plan your passage",
+    "overview": "A warm paper interface frames a supplied regional map and a focused trip-planning sequence. Navy establishes structure, coral marks the destination and forward actions, and teal supports links and status. Three exclusive panels keep map selection, manual setup, and price review distinct.",
+    "keyCharacteristics": [
+      "Warm paper, navy structure, coral actions, and teal supporting accents.",
+      "Self-hosted DM Sans body and Manrope bold headings and amounts.",
+      "A full image map with approximate interactive ramp overlays.",
+      "Separate route selection and price review surfaces."
+    ],
+    "rules": [
+      {
+        "name": "The Qualified Status Rule",
+        "body": "Pair every coverage or freshness condition with explicit readable text.",
+        "section": "colors"
+      },
+      {
+        "name": "The Price Truth Rule",
+        "body": "Give full totals and incomplete or unavailable states distinct text; a known subtotal never masquerades as the complete amount.",
+        "section": "typography"
+      },
+      {
+        "name": "The Local Elevation Rule",
+        "body": "Reserve shadows for floating search results and map controls.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do preserve exclusive task panels and labeled native route controls.",
+      "Do pair every amount with source, freshness, and completeness context.",
+      "Do preserve supplied-map provenance and approximate-position language.",
+      "Do keep keyboard focus and non-touch map controls available."
+    ],
+    "donts": [
+      "Don't present historical image annotations as current road status.",
+      "Don't present image-calibrated dots as surveyed navigation coordinates.",
+      "Don't show a known subtotal as a complete trip price.",
+      "Don't claim browser visual or device gesture verification from source inspection."
+    ]
+  }
+}

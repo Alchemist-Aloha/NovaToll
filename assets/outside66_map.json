@@ -1,0 +1,108 @@
+{
+  "note": "Approximate image coordinates on the supplied 1429 x 1707 artwork, not surveyed locations or GPS coordinates. Labels and route identities come from the Ride66Express planner catalog.",
+  "locations": {
+    "gainesville": {
+      "label": "Gainesville / western terminus",
+      "x": 239,
+      "y": 500
+    },
+    "university": {
+      "label": "University Boulevard",
+      "x": 290,
+      "y": 497
+    },
+    "centuryPark": {
+      "label": "Century Park / Balls Ford",
+      "x": 365,
+      "y": 485
+    },
+    "sudley": {
+      "label": "Sudley Road / Route 234",
+      "x": 415,
+      "y": 468
+    },
+    "route28": {
+      "label": "Route 28 / Walney / Braddock",
+      "x": 510,
+      "y": 376
+    },
+    "fairfaxCounty": {
+      "label": "Fairfax County Parkway",
+      "x": 568,
+      "y": 352
+    },
+    "stringfellow": {
+      "label": "Stringfellow Road",
+      "x": 608,
+      "y": 340
+    },
+    "monument": {
+      "label": "Monument Drive",
+      "x": 653,
+      "y": 328
+    },
+    "route50": {
+      "label": "Route 50",
+      "x": 712,
+      "y": 311
+    },
+    "chainBridge": {
+      "label": "Chain Bridge Road / Route 123",
+      "x": 805,
+      "y": 282
+    },
+    "vaden": {
+      "label": "Vaden Drive",
+      "x": 869,
+      "y": 266
+    },
+    "beltway": {
+      "label": "I-495 / eastern terminus",
+      "x": 916,
+      "y": 253
+    }
+  },
+  "entries": {
+    "401": "gainesville",
+    "402": "university",
+    "403": "centuryPark",
+    "404": "sudley",
+    "400": "sudley",
+    "405": "route28",
+    "406": "route28",
+    "408": "stringfellow",
+    "409": "monument",
+    "410": "route50",
+    "411": "chainBridge",
+    "412": "beltway",
+    "417": "beltway",
+    "416": "beltway",
+    "414": "beltway",
+    "413": "beltway",
+    "415": "beltway",
+    "418": "vaden",
+    "419": "chainBridge",
+    "421": "monument",
+    "423": "route28",
+    "424": "route28"
+  },
+  "exits": {
+    "Walney Rd/Rt28": "route28",
+    "GP Exit/Fairfax County Pkwy": "fairfaxCounty",
+    "Monument Dr": "monument",
+    "Chain Bridge Rd": "chainBridge",
+    "Vaden Dr": "vaden",
+    "I-495 NB General Purpose": "beltway",
+    "I-495 Express Lanes (NB & SB)": "beltway",
+    "I-495 SB General Purpose": "beltway",
+    "EB GP Exit": "beltway",
+    "US-50 EB": "route50",
+    "Stringfellow Rd": "stringfellow",
+    "GP Exit/Rt28 SB": "route28",
+    "Rt28 NB/Walney Rd/Braddock Rd": "route28",
+    "GP Exit/Sudley Rd": "sudley",
+    "Century Park": "centuryPark",
+    "University Blvd": "university",
+    "WB GP Exit": "gainesville"
+  }
+}
