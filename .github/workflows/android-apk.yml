@@ -3,10 +3,13 @@ name: Android APKs
 on:
   push:
     branches: [main, master]
+    tags: ['v*']
+  release:
+    types: [published]
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: android-apk-${{ github.ref }}
@@ -94,6 +97,21 @@ jobs:
           path: build/app/outputs/flutter-apk/*.apk
           if-no-files-found: error
           retention-days: 30
+
+      - name: Publish release APKs
+        if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.event.release.tag_name || github.ref_name }}
+        run: |
+          apks=(build/app/outputs/flutter-apk/*.apk)
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            gh release upload "$RELEASE_TAG" "${apks[@]}" --clobber
+          else
+            gh release create "$RELEASE_TAG" "${apks[@]}" \
+              --verify-tag --title "Nova Toll $RELEASE_TAG" --generate-notes
+          fi
 
       - name: Remove signing files
         if: always()
