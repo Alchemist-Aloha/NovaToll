@@ -14,6 +14,10 @@ Estimates are for a standard paid E-ZPass trip. An internet connection is requir
 
 ## Install on Android
 
+If this repository has GitHub Actions builds enabled, download
+**nova-toll-android-apks** from a successful **Android APKs** run under **Actions**
+and extract the archive to find the APKs.
+
 Open the Nova Toll APK on your Android device and follow the installation prompts. If Android asks, allow the app you used to open the APK to install unknown apps.
 
 If you have a choice of APKs, select the one for your device:
@@ -57,3 +61,4 @@ Location is optional and requested for a one-time entry suggestion. Your coordin
 ## Contributing
 
 For development setup, build commands, and testing guidance, see [Repository Guidelines](AGENTS.md).
+For GitHub Actions signing setup and APK downloads, see [Android builds](docs/android-builds.md).
