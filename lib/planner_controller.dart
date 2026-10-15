@@ -87,7 +87,7 @@ class PlannerController extends ChangeNotifier {
         records.add({
           ...?base,
           ...Map<String, dynamic>.from(destination),
-          'road': east ? '66' : '66outside',
+          'road': destination['road'] ?? (east ? '66' : '66outside'),
           'ramp': 'exit',
         });
       }
@@ -262,9 +262,9 @@ class PlannerController extends ChangeNotifier {
           (r) =>
               r['id'] == dest['id'] &&
               r['ramp'] == 'exit' &&
-              (r['direction'] == null || r['direction'] == route['dir']) &&
-              (route['road'] != '66' || r['road'] == '66') &&
-              (route['road'] != '66outside' || r['road'] == '66outside'),
+              (r['direction'] == null ||
+                  r['direction'] == (dest['direction'] ?? route['dir'])) &&
+              r['road'] == (dest['road'] ?? route['road']),
         )) {
           matches.add({
             ...route,

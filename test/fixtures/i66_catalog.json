@@ -1,0 +1,498 @@
+{
+  "source": "https://vai66tolls.com/Index",
+  "checkedAt": "2026-10-15T14:28:51.450981+00:00",
+  "directions": {
+    "Eastbound": {
+      "entries": [
+        {
+          "id": "1",
+          "label": "I-66 West"
+        },
+        {
+          "id": "2",
+          "label": "I-495 N"
+        },
+        {
+          "id": "3",
+          "label": "I-495 Express Lanes N"
+        },
+        {
+          "id": "4",
+          "label": "Route 7 - Leesburg Pike"
+        },
+        {
+          "id": "5",
+          "label": "I-495 S"
+        },
+        {
+          "id": "6",
+          "label": "Route 267 - Dulles Toll Road"
+        },
+        {
+          "id": "7",
+          "label": "Route 123 - Dolley Madison Blvd"
+        },
+        {
+          "id": "8",
+          "label": "Sycamore St"
+        },
+        {
+          "id": "9",
+          "label": "Glebe Road"
+        }
+      ],
+      "exits": {
+        "1": [
+          {
+            "id": "4",
+            "label": "Route 7 - Leesburg Pike"
+          },
+          {
+            "id": "10",
+            "label": "Westmoreland St"
+          },
+          {
+            "id": "11",
+            "label": "Washington Blvd"
+          },
+          {
+            "id": "12",
+            "label": "Fairfax Drive"
+          },
+          {
+            "id": "13",
+            "label": "Lee Highway - Spout Run Parkway"
+          },
+          {
+            "id": "14",
+            "label": "Exit 73 - Rosslyn"
+          },
+          {
+            "id": "15",
+            "label": "Exit 75 - Pentagon/Alexandria"
+          },
+          {
+            "id": "16",
+            "label": "Washington"
+          }
+        ],
+        "2": [
+          {
+            "id": "4",
+            "label": "Route 7 - Leesburg Pike"
+          },
+          {
+            "id": "10",
+            "label": "Westmoreland St"
+          },
+          {
+            "id": "11",
+            "label": "Washington Blvd"
+          },
+          {
+            "id": "12",
+            "label": "Fairfax Drive"
+          },
+          {
+            "id": "13",
+            "label": "Lee Highway - Spout Run Parkway"
+          },
+          {
+            "id": "14",
+            "label": "Exit 73 - Rosslyn"
+          },
+          {
+            "id": "15",
+            "label": "Exit 75 - Pentagon/Alexandria"
+          },
+          {
+            "id": "16",
+            "label": "Washington"
+          }
+        ],
+        "3": [
+          {
+            "id": "4",
+            "label": "Route 7 - Leesburg Pike"
+          },
+          {
+            "id": "10",
+            "label": "Westmoreland St"
+          },
+          {
+            "id": "11",
+            "label": "Washington Blvd"
+          },
+          {
+            "id": "12",
+            "label": "Fairfax Drive"
+          },
+          {
+            "id": "13",
+            "label": "Lee Highway - Spout Run Parkway"
+          },
+          {
+            "id": "14",
+            "label": "Exit 73 - Rosslyn"
+          },
+          {
+            "id": "15",
+            "label": "Exit 75 - Pentagon/Alexandria"
+          },
+          {
+            "id": "16",
+            "label": "Washington"
+          }
+        ],
+        "4": [
+          {
+            "id": "10",
+            "label": "Westmoreland St"
+          },
+          {
+            "id": "11",
+            "label": "Washington Blvd"
+          },
+          {
+            "id": "12",
+            "label": "Fairfax Drive"
+          },
+          {
+            "id": "13",
+            "label": "Lee Highway - Spout Run Parkway"
+          },
+          {
+            "id": "14",
+            "label": "Exit 73 - Rosslyn"
+          },
+          {
+            "id": "15",
+            "label": "Exit 75 - Pentagon/Alexandria"
+          },
+          {
+            "id": "16",
+            "label": "Washington"
+          }
+        ],
+        "5": [
+          {
+            "id": "10",
+            "label": "Westmoreland St"
+          },
+          {
+            "id": "11",
+            "label": "Washington Blvd"
+          },
+          {
+            "id": "12",
+            "label": "Fairfax Drive"
+          },
+          {
+            "id": "13",
+            "label": "Lee Highway - Spout Run Parkway"
+          },
+          {
+            "id": "14",
+            "label": "Exit 73 - Rosslyn"
+          },
+          {
+            "id": "15",
+            "label": "Exit 75 - Pentagon/Alexandria"
+          },
+          {
+            "id": "16",
+            "label": "Washington"
+          }
+        ],
+        "6": [
+          {
+            "id": "10",
+            "label": "Westmoreland St"
+          },
+          {
+            "id": "11",
+            "label": "Washington Blvd"
+          },
+          {
+            "id": "12",
+            "label": "Fairfax Drive"
+          },
+          {
+            "id": "13",
+            "label": "Lee Highway - Spout Run Parkway"
+          },
+          {
+            "id": "14",
+            "label": "Exit 73 - Rosslyn"
+          },
+          {
+            "id": "15",
+            "label": "Exit 75 - Pentagon/Alexandria"
+          },
+          {
+            "id": "16",
+            "label": "Washington"
+          }
+        ],
+        "7": [
+          {
+            "id": "10",
+            "label": "Westmoreland St"
+          },
+          {
+            "id": "11",
+            "label": "Washington Blvd"
+          },
+          {
+            "id": "12",
+            "label": "Fairfax Drive"
+          },
+          {
+            "id": "13",
+            "label": "Lee Highway - Spout Run Parkway"
+          },
+          {
+            "id": "14",
+            "label": "Exit 73 - Rosslyn"
+          },
+          {
+            "id": "15",
+            "label": "Exit 75 - Pentagon/Alexandria"
+          },
+          {
+            "id": "16",
+            "label": "Washington"
+          }
+        ],
+        "8": [
+          {
+            "id": "12",
+            "label": "Fairfax Drive"
+          },
+          {
+            "id": "13",
+            "label": "Lee Highway - Spout Run Parkway"
+          },
+          {
+            "id": "14",
+            "label": "Exit 73 - Rosslyn"
+          },
+          {
+            "id": "15",
+            "label": "Exit 75 - Pentagon/Alexandria"
+          },
+          {
+            "id": "16",
+            "label": "Washington"
+          }
+        ],
+        "9": [
+          {
+            "id": "13",
+            "label": "Lee Highway - Spout Run Parkway"
+          },
+          {
+            "id": "14",
+            "label": "Exit 73 - Rosslyn"
+          },
+          {
+            "id": "15",
+            "label": "Exit 75 - Pentagon/Alexandria"
+          },
+          {
+            "id": "16",
+            "label": "Washington"
+          }
+        ]
+      }
+    },
+    "Westbound": {
+      "entries": [
+        {
+          "id": "16",
+          "label": "Washington"
+        },
+        {
+          "id": "15",
+          "label": "Exit 75 - Pentagon/Alexandria"
+        },
+        {
+          "id": "17",
+          "label": "Lee Highway - Scott Street"
+        },
+        {
+          "id": "13",
+          "label": "Lee Highway - Spout Run Parkway"
+        },
+        {
+          "id": "12",
+          "label": "Fairfax Drive"
+        },
+        {
+          "id": "11",
+          "label": "Washington Blvd"
+        },
+        {
+          "id": "4",
+          "label": "Route 7 - Leesburg Pike"
+        }
+      ],
+      "exits": {
+        "16": [
+          {
+            "id": "9",
+            "label": "Glebe Road"
+          },
+          {
+            "id": "8",
+            "label": "Sycamore St"
+          },
+          {
+            "id": "6",
+            "label": "Route 267 - Dulles Toll Road"
+          },
+          {
+            "id": "4",
+            "label": "Route 7 - Leesburg Pike"
+          },
+          {
+            "id": "5",
+            "label": "I-495 S"
+          },
+          {
+            "id": "1",
+            "label": "I-66 West"
+          }
+        ],
+        "15": [
+          {
+            "id": "9",
+            "label": "Glebe Road"
+          },
+          {
+            "id": "8",
+            "label": "Sycamore St"
+          },
+          {
+            "id": "6",
+            "label": "Route 267 - Dulles Toll Road"
+          },
+          {
+            "id": "4",
+            "label": "Route 7 - Leesburg Pike"
+          },
+          {
+            "id": "5",
+            "label": "I-495 S"
+          },
+          {
+            "id": "1",
+            "label": "I-66 West"
+          }
+        ],
+        "17": [
+          {
+            "id": "9",
+            "label": "Glebe Road"
+          },
+          {
+            "id": "8",
+            "label": "Sycamore St"
+          },
+          {
+            "id": "6",
+            "label": "Route 267 - Dulles Toll Road"
+          },
+          {
+            "id": "4",
+            "label": "Route 7 - Leesburg Pike"
+          },
+          {
+            "id": "5",
+            "label": "I-495 S"
+          },
+          {
+            "id": "1",
+            "label": "I-66 West"
+          }
+        ],
+        "13": [
+          {
+            "id": "9",
+            "label": "Glebe Road"
+          },
+          {
+            "id": "8",
+            "label": "Sycamore St"
+          },
+          {
+            "id": "6",
+            "label": "Route 267 - Dulles Toll Road"
+          },
+          {
+            "id": "4",
+            "label": "Route 7 - Leesburg Pike"
+          },
+          {
+            "id": "5",
+            "label": "I-495 S"
+          },
+          {
+            "id": "1",
+            "label": "I-66 West"
+          }
+        ],
+        "12": [
+          {
+            "id": "8",
+            "label": "Sycamore St"
+          },
+          {
+            "id": "6",
+            "label": "Route 267 - Dulles Toll Road"
+          },
+          {
+            "id": "4",
+            "label": "Route 7 - Leesburg Pike"
+          },
+          {
+            "id": "5",
+            "label": "I-495 S"
+          },
+          {
+            "id": "1",
+            "label": "I-66 West"
+          }
+        ],
+        "11": [
+          {
+            "id": "6",
+            "label": "Route 267 - Dulles Toll Road"
+          },
+          {
+            "id": "4",
+            "label": "Route 7 - Leesburg Pike"
+          },
+          {
+            "id": "5",
+            "label": "I-495 S"
+          },
+          {
+            "id": "1",
+            "label": "I-66 West"
+          }
+        ],
+        "4": [
+          {
+            "id": "5",
+            "label": "I-495 S"
+          },
+          {
+            "id": "1",
+            "label": "I-66 West"
+          }
+        ]
+      }
+    }
+  }
+}

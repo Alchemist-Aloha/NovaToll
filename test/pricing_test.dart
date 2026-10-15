@@ -47,7 +47,7 @@ void main() {
           direction,
           '${entry['id']}',
         );
-        allExits.addAll(exits);
+        allExits.addAll(exits.where((e) => '${e['id']}'.startsWith('o66:')));
         expect(entry['road'], '66outside');
         expect(entry['direction'], direction);
         expect(entry['ramp'], 'entry');

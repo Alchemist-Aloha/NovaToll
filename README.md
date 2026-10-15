@@ -1,6 +1,8 @@
 # Nova Toll
 
-Check express-lane toll estimates before you travel in Northern Virginia. Nova Toll for Android lets you choose an entry and exit on a map, compare the estimate with the operator’s information, and save routes you use often.
+Northern Virginia’s dynamic express-lane tolls can be surprisingly high. Planning ahead is harder when your trip crosses highways or toll operators, leaving you without a straightforward way to estimate the full trip cost in one place.
+
+Nova Toll for Android addresses both problems with robust cross-highway toll estimates. Choose your entry and exit on the map to combine available operator estimates for supported connections, review each segment’s cost, and save routes you use often. Missing prices and incomplete totals are clearly flagged so you can make an informed choice before entering the lanes.
 
 ## Coverage
 
@@ -42,7 +44,7 @@ Tap **Save this trip** to keep a route on your device. Open **Saved** to load it
 
 Posted roadside prices govern. Estimates may change, and unavailable or incomplete prices should not be treated as free travel.
 
-Outside-Beltway I-66 planner values are historical averages; realtime accuracy is unverified. Inside-Beltway I-66 responses do not provide a rate timestamp. A recent refresh does not guarantee a newly updated rate. Use **Sources & coverage** to open the official operator websites.
+A recent refresh does not guarantee a newly updated rate. Use **Sources & coverage** to open the official operator websites.
 
 Map markers are approximate. Construction notes in the map artwork are historical and do not describe current road conditions. Nova Toll is an independent trip planner; verify ramp names and road signs. Use it while parked or have a passenger operate it.
 

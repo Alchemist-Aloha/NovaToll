@@ -119,7 +119,9 @@ void main() {
           controller.mapRecords.where((r) => r['road'] == '66outside'),
           hasLength(194),
         );
-        for (final exit in exits) {
+        for (final exit in exits.where(
+          (e) => '${e['id']}'.startsWith('o66:'),
+        )) {
           final record = controller.mapRecords.singleWhere(
             (r) => r['road'] == '66outside' && r['id'] == exit['id'],
           );

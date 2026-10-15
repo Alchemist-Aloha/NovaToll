@@ -13,58 +13,33 @@ class TripEstimate extends StatelessWidget {
   final PlannerController controller;
   final VoidCallback onEdit;
 
-  List<Map<String, String>> _officialSources(Json? trip, Json? quote) {
-    final roads = <String>[
+  List<Map<String, String>> _officialSources(
+    Map<String, dynamic>? trip,
+    Map<String, dynamic>? quote,
+    List<String> routeRoads,
+  ) {
+    final roads = <String>{
       '${trip?['road'] ?? ''}',
-      for (final leg in (quote?['legs'] as List? ?? const []))
-        if (leg is Map) '${leg['road'] ?? ''}',
-    ].map((road) => road.toLowerCase()).toList();
-    final source = '${quote?['source'] ?? ''}'.toLowerCase();
-    final sources = <Map<String, String>>[];
-    void add(String label, String url) {
-      if (sources.every((source) => source['url'] != url)) {
-        sources.add({'label': label, 'url': url});
-      }
-    }
-
-    final express = roads.any(
-          (road) =>
-              road == '495' ||
-              road == '95' ||
-              road == '395' ||
-              road.contains('i-495') ||
-              road.contains('i-95') ||
-              road.contains('i-395'),
-        ) ||
-        source.contains('express lanes');
-    final inside66 = roads.any(
-      (road) =>
-          road == '66' ||
-          road == 'i-66' ||
-          road.contains('i-66 east') ||
-          road.contains('inside beltway'),
-    );
-    final outside66 = roads.any(
-      (road) =>
-          road == '66outside' ||
-          road == '66w' ||
-          road.contains('i-66 west') ||
-          road.contains('outside beltway'),
-    );
-    if (express) {
-      add(
-        'I-495 / I-95 / I-395 Express Lanes',
-        'https://www.expresslanes.com/map-your-trip',
-      );
-    }
-    if (inside66) add('I-66 inside Beltway · VDOT', 'https://vai66tolls.com');
-    if (outside66) {
-      add(
-        'I-66 outside Beltway · Ride66Express',
-        'https://ride66express.com/pricing/plan-your-trip/',
-      );
-    }
-    return sources;
+      ...routeRoads,
+      for (final road in (quote?['roads'] as List? ?? const [])) '$road',
+    };
+    return [
+      if (roads.any({'495', '95', '395'}.contains))
+        {
+          'label': 'I-495 / I-95 / I-395 Express Lanes',
+          'url': 'https://www.expresslanes.com/map-your-trip',
+        },
+      if (roads.contains('66'))
+        {
+          'label': 'I-66 inside Beltway · VDOT',
+          'url': 'https://vai66tolls.com',
+        },
+      if (roads.contains('66outside'))
+        {
+          'label': 'I-66 outside Beltway · Ride66Express',
+          'url': 'https://ride66express.com/pricing/plan-your-trip/',
+        },
+    ];
   }
 
   @override
@@ -88,7 +63,11 @@ class TripEstimate extends StatelessWidget {
         ),
       ),
     );
-    final officialSources = _officialSources(c.trip, q);
+    final officialSources = _officialSources(
+      c.trip,
+      q,
+      c.trip == null ? const [] : c.service.routeRoads(c.trip!),
+    );
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,

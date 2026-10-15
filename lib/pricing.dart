@@ -98,25 +98,164 @@ class PricingService {
   }
 
   Future<List<Json>> exits(String road, String dir, String entry) async {
+    final direct = await _nativeExits(road, dir, entry);
+    final result = <Json>[...direct];
+    final origin = {'road': road, 'dir': dir, 'entry': entry};
+    void connect(
+      Json via,
+      String nextRoad,
+      String nextDir,
+      String nextEntry,
+      List<Json> destinations,
+    ) {
+      for (final destination in destinations) {
+        final destinationRoad = destination['road'] ?? nextRoad;
+        final marker = ramps
+            .where(
+              (r) =>
+                  r['ramp'] == 'exit' &&
+                  r['id'] == destination['id'] &&
+                  r['road'] == destinationRoad &&
+                  (r['direction'] == null || r['direction'] == nextDir) &&
+                  (destination['group'] == null ||
+                      r['group'] == destination['group']),
+            )
+            .firstOrNull;
+        final id =
+            'via:${via['id']}|$nextRoad|$nextDir|$nextEntry|${destination['id']}';
+        result.add({
+          ...?marker,
+          ...destination,
+          'id': id,
+          'label': '${destination['label']}'.startsWith('I-')
+              ? destination['label']
+              : '${_roadLabel(destinationRoad)} · ${destination['label']}',
+          'road': destinationRoad,
+          'direction': destination['direction'] ?? nextDir,
+          'connection': [
+            {...origin, 'exit': via['id']},
+            {
+              'road': nextRoad,
+              'dir': nextDir,
+              'entry': nextEntry,
+              'exit': destination['id'],
+            },
+          ],
+        });
+      }
+    }
+
+    if (road == '66outside' && dir == 'Eastbound') {
+      final through = direct
+          .where((e) => e['label'] == 'EB GP Exit')
+          .firstOrNull;
+      if (through != null) {
+        connect(through, '66', 'Eastbound', '1', _insideEastStops());
+      }
+      final express = direct
+          .where((e) => e['label'] == 'I-495 Express Lanes (NB & SB)')
+          .firstOrNull;
+      if (express != null) {
+        for (final (nextDir, nextEntry) in [
+          ('Northbound', '187NO'),
+          ('Southbound', '187SO'),
+        ]) {
+          connect(
+            express,
+            '495',
+            nextDir,
+            nextEntry,
+            _expressExits(
+              '495',
+              nextDir,
+              nextEntry,
+            ).where((e) => !'${e['id']}'.contains(':')).toList(),
+          );
+        }
+      }
+    } else if (road == '66' && dir == 'Westbound') {
+      final through = direct.where((e) => e['id'] == '1').firstOrNull;
+      if (through != null) {
+        connect(
+          through,
+          '66outside',
+          'Westbound',
+          '417',
+          _outsideExits('Westbound', '417'),
+        );
+      }
+      final south = direct.where((e) => e['id'] == '5').firstOrNull;
+      if (south != null) {
+        connect(
+          south,
+          '495',
+          'Southbound',
+          '187SO',
+          _expressExits(
+            '495',
+            'Southbound',
+            '187SO',
+          ).where((e) => !'${e['id']}'.contains(':')).toList(),
+        );
+      }
+    } else if (road != '66' && road != '66outside') {
+      final interchange = direct
+          .where((e) => '${e['label']}'.endsWith('Interstate 66'))
+          .firstOrNull;
+      if (interchange != null) {
+        final nextEntry = '${interchange['path']}'.startsWith('495North')
+            ? '415'
+            : '414';
+        const legacyLabels = {
+          'US-50 EB',
+          'Monument Dr',
+          'Stringfellow Rd',
+          'Rt28 NB/Walney Rd/Braddock Rd',
+          'WB GP Exit',
+        };
+        connect(
+          interchange,
+          '66outside',
+          'Westbound',
+          nextEntry,
+          _outsideExits(
+            'Westbound',
+            nextEntry,
+          ).where((e) => !legacyLabels.contains(e['label'])).toList(),
+        );
+      }
+    }
+    return result;
+  }
+
+  List<Json> _insideEastStops() => [
+    for (final stop in _eastStops)
+      {
+        ...?ramps
+            .where(
+              (r) =>
+                  r['road'] == '66' &&
+                  r['group'] == '66e' &&
+                  r['ramp'] == 'exit' &&
+                  r['id'] == stop['id'],
+            )
+            .firstOrNull,
+        ...stop,
+        'road': '66',
+        'direction': 'Eastbound',
+      },
+  ];
+
+  String _roadLabel(dynamic road) => switch (road) {
+    '66' => 'I-66 inside Beltway',
+    '66outside' => 'I-66 outside Beltway',
+    _ => 'I-$road',
+  };
+
+  Future<List<Json>> _nativeExits(String road, String dir, String entry) async {
     await _ensureLoaded();
     if (road == '66outside') {
-      final list = _outside[dir];
-      final selected = list is List
-          ? list.whereType<Map>().cast<Json>().where((e) => e['id'] == entry)
-          : const <Json>[];
-      final found = selected.isEmpty ? null : selected.first;
-      final exits = found?['exits'];
-      if (exits is! List) return <Json>[];
-      return [
-        for (var i = 0; i < exits.length; i++)
-          if (exits[i] is Map)
-            _enrichOutsideExit(
-              _json(exits[i]),
-              dir: dir,
-              entry: entry,
-              index: i,
-            ),
-      ];
+      return _outsideExits(dir, entry);
     }
     if (road == '66') {
       final east = dir == 'Eastbound';
@@ -127,20 +266,53 @@ class PricingService {
       );
       return [
         for (final item in _parseOptionsWithCoordinates(response.body))
-          {...item, 'group': east ? '66e' : '66w'},
+          {
+            ...item,
+            'group': east ? '66e' : '66w',
+            'road': '66',
+            'direction': dir,
+          },
       ];
     }
+    return _expressExits(road, dir, entry);
+  }
+
+  List<Json> _outsideExits(String dir, String entry) {
+    final list = _outside[dir];
+    final selected = list is List
+        ? list.whereType<Map>().cast<Json>().where((e) => e['id'] == entry)
+        : const <Json>[];
+    final found = selected.isEmpty ? null : selected.first;
+    final exits = found?['exits'];
+    if (exits is! List) return <Json>[];
+    return [
+      for (var i = 0; i < exits.length; i++)
+        if (exits[i] is Map)
+          _enrichOutsideExit(_json(exits[i]), dir: dir, entry: entry, index: i),
+    ];
+  }
+
+  List<Json> _expressExits(String road, String dir, String entry) {
     final data = _catalog[dir];
     final entries = data is Map ? data['entries'] : null;
     final item = entries is Map ? entries[entry] : null;
-    if (item is! Map) throw StateError('Unknown entry');
+    if (item is! Map || !'${item['path']}'.startsWith(road)) {
+      throw StateError('Unknown entry');
+    }
     final exits = item['exits'];
     if (exits is! List) return <Json>[];
     final all = data is Map ? data['exits'] : null;
     final direct = <Json>[
       for (final link in exits)
         if (link is Map && all is Map && all[link['id']] is Map)
-          {..._json(all[link['id']]), 'ods': link['ods']},
+          {
+            ..._json(all[link['id']]),
+            'ods': link['ods'],
+            'road': RegExp(r'^\d+')
+                .firstMatch('${all[link['id']]['path']}')
+                ?.group(0),
+            'direction': dir,
+          },
     ];
     final interchange = direct
         .where((item) => '${item['label']}'.endsWith('Interstate 66'))
@@ -153,6 +325,8 @@ class PricingService {
         'label': 'I-66 west · ${stop[1]} (express)',
         'group': '66w',
         'via': interchange['id'],
+        'road': '66outside',
+        'direction': 'Westbound',
         ..._outsideMapForConnectedLabel(stop[0]),
       });
       if (stop[0] != 'monument' && stop[0] != 'stringfellow') {
@@ -161,18 +335,21 @@ class PricingService {
           'label': 'I-66 west · ${stop[1]} (regular lanes)',
           'group': '66w',
           'via': interchange['id'],
+          'road': '66outside',
+          'direction': 'Westbound',
           ..._outsideMapForConnectedLabel(stop[0]),
         });
       }
     }
-    if (dir == 'Northbound') {
-      for (final stop in _eastStops) {
+    if ('${interchange['path']}'.startsWith('495North')) {
+      for (final stop in _insideEastStops()) {
         result.add({
           ...stop,
           'id': '66e:${stop['id']}',
           'label': 'I-66 east · ${stop['label']}',
           'group': '66e',
           'via': interchange['id'],
+          'direction': 'Eastbound',
         });
       }
     }
@@ -181,13 +358,109 @@ class PricingService {
 
   Future<Json> quote(Json trip) async {
     await _ensureLoaded();
+    final result = await _quoteRoute(trip);
+    return {...result, 'roads': routeRoads(trip)};
+  }
+
+  List<String> routeRoads(Json trip) {
     final road = '${trip['road']}';
+    final exit = '${trip['exit']}';
+    if (exit.startsWith('via:')) {
+      final parts = exit.substring(4).split('|');
+      if (parts.length == 5) return [road, parts[1]];
+    }
+    return [
+      road,
+      if (exit.startsWith('66e:')) '66',
+      if (exit.startsWith('66w:') || exit.startsWith('66g:')) '66outside',
+    ];
+  }
+
+  Future<Json> _quoteRoute(Json trip) async {
+    final road = '${trip['road']}';
+    if ('${trip['exit']}'.startsWith('via:')) return _quoteConnection(trip);
     if (road == '66outside') return _quoteOutside(trip);
     if (road == '66') return _quoteInside(trip);
     if ('${trip['exit']}'.startsWith('66w:')) {
       return _quoteConnectedWest(trip);
     }
     return _quoteExpress(trip);
+  }
+
+  Future<Json> _quoteConnection(Json trip) async {
+    final destinations = await exits(
+      '${trip['road']}',
+      '${trip['dir']}',
+      '${trip['entry']}',
+    );
+    final destination = destinations
+        .where((e) => e['id'] == trip['exit'])
+        .firstOrNull;
+    final connection = destination?['connection'];
+    if (connection is! List) {
+      return _errorQuote('${trip['exit']}', 'No verified connection');
+    }
+    final segments = connection.cast<Json>();
+    final results = await Future.wait(
+      segments.map((segment) async {
+        try {
+          return await _quoteRoute(segment);
+        } catch (_) {
+          return <String, dynamic>{'error': 'Operator estimate unavailable'};
+        }
+      }),
+    );
+    final complete = results.every(
+      (r) => r['error'] == null && r['price'] is num,
+    );
+    var total = 0.0;
+    var known = false;
+    final legs = <Json>[];
+    for (var i = 0; i < results.length; i++) {
+      final result = results[i];
+      final amount = result['error'] == null
+          ? result['price']
+          : result['knownPrice'];
+      if (amount is num) {
+        total += amount;
+        known = true;
+      }
+      if (result['legs'] is List && (result['legs'] as List).isNotEmpty) {
+        legs.addAll((result['legs'] as List).whereType<Map>().map(_json));
+      } else {
+        legs.add({
+          'road': _roadLabel(segments[i]['road']),
+          if (result['error'] == null && amount is num) 'price': amount,
+          if (result['error'] != null) 'error': result['error'],
+        });
+      }
+    }
+    final notes = results.map((r) => r['note']).whereType<String>().toSet();
+    final warnings = results
+        .map((r) => r['warning'])
+        .whereType<String>()
+        .toSet();
+    return _finish(
+      {
+        'id': trip['exit'],
+        if (complete) 'price': _round(total),
+        if (!complete) 'error': 'Total incomplete',
+        if (!complete && known) 'knownPrice': _round(total),
+        'legs': legs,
+        if (notes.isNotEmpty) 'note': notes.join(' '),
+        if (warnings.isNotEmpty) 'warning': warnings.join(' '),
+      },
+      source: segments
+          .map(
+            (s) => switch (s['road']) {
+              '66outside' => 'Ride66Express planner',
+              '66' => 'VDOT I-66 calculator',
+              _ => 'Express Lanes',
+            },
+          )
+          .toSet()
+          .join(' + '),
+    );
   }
 
   void dispose() {
@@ -210,7 +483,7 @@ class PricingService {
         : null;
     if (entry is! Map) throw StateError('Unknown entry');
     final id = '${trip['exit']}';
-    final allowed = await exits('${trip['road']}', dir, '${trip['entry']}');
+    final allowed = _expressExits('${trip['road']}', dir, '${trip['entry']}');
     final destination = allowed.where((x) => x['id'] == id).firstOrNull;
     if (destination == null) return _errorQuote(id, 'No verified connection');
     final baseDestination = id.contains(':')
@@ -298,11 +571,12 @@ class PricingService {
       }, source: 'Express Lanes');
     }
     if (outside == null || outside['price'] == null) {
+      final knownPrice = base.remove('price');
       return _finish({
         ...base,
         'id': trip['exit'],
         'error': 'Total incomplete',
-        'knownPrice': base['price'],
+        'knownPrice': knownPrice,
         'legs': [
           ...?base['legs'] as List?,
           {'road': 'I-66 west express', 'error': _outsideError(results[1])},
@@ -706,7 +980,22 @@ class PricingService {
         !'${trip['exit']}'.startsWith('66w:')) {
       throw StateError('No verified outside-Beltway connection.');
     }
-    final start = dir == 'Northbound' ? '415' : '414';
+    final destination = _expressExits(
+      '${trip['road']}',
+      dir,
+      '${trip['entry']}',
+    ).where((e) => e['id'] == trip['exit']).firstOrNull;
+    final interchange = _expressExits(
+      '${trip['road']}',
+      dir,
+      '${trip['entry']}',
+    ).where((e) => e['id'] == destination?['via']).firstOrNull;
+    if (interchange == null) {
+      throw StateError('No verified outside-Beltway connection.');
+    }
+    final start = '${interchange['path']}'.startsWith('495North')
+        ? '415'
+        : '414';
     final key = '${trip['exit']}'.split(':')[1];
     final end = {
       '50': start,
@@ -742,7 +1031,7 @@ class PricingService {
     if (!knownEntries.any((item) => item['id'] == entry)) {
       throw StateError('No verified I-66 entry.');
     }
-    final knownExits = await exits('66', dir, entry);
+    final knownExits = await _nativeExits('66', dir, entry);
     if (!knownExits.any((item) => item['id'] == exit)) {
       throw StateError('No verified I-66 exit.');
     }

@@ -449,6 +449,8 @@ class _RouteMapState extends State<RouteMap> {
               _viewport = Size(box.maxWidth, box.maxHeight);
               _scheduleFit();
               final colors = Theme.of(context).colorScheme;
+              final showFullMap =
+                  MediaQuery.sizeOf(context).shortestSide >= 600;
               return ClipRRect(
                 borderRadius: BorderRadius.circular(16),
                 child: Stack(
@@ -507,8 +509,10 @@ class _RouteMapState extends State<RouteMap> {
                               () => _zoom(1 / 1.5),
                               'Zoom out',
                             ),
-                            const SizedBox(height: 8),
-                            _mapButton(Icons.fit_screen, _fit, 'Full map'),
+                            if (showFullMap) ...[
+                              const SizedBox(height: 8),
+                              _mapButton(Icons.fit_screen, _fit, 'Full map'),
+                            ],
                           ],
                         ),
                       )

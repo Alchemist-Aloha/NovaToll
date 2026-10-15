@@ -3,6 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:nova_toll/main.dart';
 import 'package:nova_toll/pricing.dart';
+import 'package:nova_toll/planner_controller.dart';
+import 'package:nova_toll/route_map.dart';
+import 'package:nova_toll/widgets/trip_estimate.dart';
 import 'package:timezone/data/latest.dart' as tzdata;
 
 class FakePricing extends PricingService {
@@ -83,6 +86,26 @@ void main() {
     await tester.pumpAndSettle();
   }
 
+  Future<void> showEstimate(
+    WidgetTester tester, {
+    required Json trip,
+    Json? quote,
+  }) async {
+    final controller = PlannerController(service: FakePricing())
+      ..trip = trip
+      ..quote = quote;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: SingleChildScrollView(
+            child: TripEstimate(controller: controller, onEdit: () {}),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+  }
+
   testWidgets('manual route calculates on map, saves, reloads, and deletes', (
     tester,
   ) async {
@@ -95,10 +118,7 @@ void main() {
     expect(find.byKey(const ValueKey('estimate-amount')), findsOneWidget);
     expect(find.text('\$4.25'), findsWidgets);
     expect(find.text('Official toll check websites'), findsOneWidget);
-    expect(
-      find.text('I-495 / I-95 / I-395 Express Lanes'),
-      findsOneWidget,
-    );
+    expect(find.text('I-495 / I-95 / I-395 Express Lanes'), findsOneWidget);
 
     final expand = find.byTooltip('Expand trip details');
     if (expand.evaluate().isNotEmpty) {
@@ -143,6 +163,59 @@ void main() {
     await tester.pumpWidget(const SizedBox.shrink());
   });
 
+  testWidgets(
+    'cross-highway estimate shows both operator websites before quote',
+    (tester) async {
+      await showEstimate(
+        tester,
+        trip: {
+          'road': '495',
+          'entry': 'a',
+          'exit': '66e:3',
+          'dir': 'Northbound',
+        },
+      );
+      expect(find.text('I-495 / I-95 / I-395 Express Lanes'), findsOneWidget);
+      expect(find.text('I-66 inside Beltway · VDOT'), findsOneWidget);
+    },
+  );
+
+  testWidgets('partial cross-highway quote shows all involved operators', (
+    tester,
+  ) async {
+    await showEstimate(
+      tester,
+      trip: {'road': '495', 'entry': 'a', 'exit': 'via:unused'},
+      quote: {
+        'error': 'Total incomplete',
+        'roads': ['495', '66outside'],
+        'legs': [
+          {'road': 'I-495', 'price': 3},
+          {'road': 'I-66 west express', 'error': 'Unavailable'},
+        ],
+      },
+    );
+    expect(find.text('I-495 / I-95 / I-395 Express Lanes'), findsOneWidget);
+    expect(find.text('I-66 outside Beltway · Ride66Express'), findsOneWidget);
+  });
+
+  testWidgets('operator links are deduplicated across route roads', (
+    tester,
+  ) async {
+    await showEstimate(
+      tester,
+      trip: {'road': '495', 'entry': 'a', 'exit': '66e:3'},
+      quote: {
+        'roads': ['495', '95', '395', '66', '66outside'],
+        'legs': const [],
+      },
+    );
+    expect(find.text('Official toll check websites'), findsOneWidget);
+    expect(find.text('I-495 / I-95 / I-395 Express Lanes'), findsOneWidget);
+    expect(find.text('I-66 inside Beltway · VDOT'), findsOneWidget);
+    expect(find.text('I-66 outside Beltway · Ride66Express'), findsOneWidget);
+  });
+
   testWidgets('map fills phone viewport and preserves zoom across navigation', (
     tester,
   ) async {
@@ -164,6 +237,41 @@ void main() {
     expect(controller.value.getMaxScaleOnAxis(), closeTo(zoomed, 0.0001));
     expect(tester.takeException(), isNull);
     await tester.pumpWidget(const SizedBox.shrink());
+  });
+
+  testWidgets('full map control is tablet-only', (tester) async {
+    final ramps = [
+      {
+        'id': 'test-ramp',
+        'label': 'Test ramp',
+        'road': '495',
+        'ramp': 'entry',
+        'mapX': 500,
+        'mapY': 400,
+      },
+    ];
+
+    Future<void> show(Size size) async {
+      tester.view.physicalSize = size;
+      tester.view.devicePixelRatio = 1;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: RouteMap(ramps: ramps, onChoose: (_) {}),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+    }
+
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    await show(const Size(390, 844));
+    expect(find.byTooltip('Full map'), findsNothing);
+    await show(const Size(844, 390));
+    expect(find.byTooltip('Full map'), findsNothing);
+    await show(const Size(1024, 768));
+    expect(find.byTooltip('Full map'), findsOneWidget);
   });
 
   testWidgets(

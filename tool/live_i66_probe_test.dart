@@ -66,4 +66,61 @@ void main() {
     },
     timeout: const Timeout(Duration(minutes: 2)),
   );
+  test('cross-highway operator handoffs', () async {
+    await HttpOverrides.runWithHttpOverrides(() async {
+      final service = PricingService();
+      final results = <Json>[];
+      try {
+        await service.load();
+        for (final (road, direction, entry, targetRoad, targetExit) in [
+          ('66outside', 'Eastbound', '401', '66', '|16'),
+          ('66', 'Westbound', '16', '66outside', '|o66:417:9'),
+          ('66outside', 'Eastbound', '401', '95', '|218SD'),
+          ('66outside', 'Eastbound', '401', '495', '|181ND'),
+          ('66', 'Westbound', '16', '95', '|218SD'),
+          ('395', 'Southbound', '2232SO', '66outside', '66w:28'),
+          ('495', 'Northbound', '189NO', '66', '66e:16'),
+        ]) {
+          final exits = await service.exits(road, direction, entry);
+          final destination = exits.firstWhere(
+            (exit) =>
+                exit['road'] == targetRoad &&
+                '${exit['id']}'.endsWith(targetExit),
+          );
+          final trip = <String, dynamic>{
+            'road': road,
+            'dir': direction,
+            'entry': entry,
+            'exit': destination['id'],
+            'exitLabel': destination['label'],
+          };
+          final quote = await service.quote(trip);
+          expect(quote['id'], destination['id']);
+          expect(
+            quote['roads'],
+            containsAll([road, targetRoad == '95' ? '495' : targetRoad]),
+          );
+          expect(quote['error'], isNot('No verified connection'));
+          if (quote['error'] != null) expect(quote['price'], isNull);
+          results.add({'trip': trip, 'quote': quote});
+          stdout.writeln(
+            '$road $direction $entry → ${destination['label']}: '
+            '${quote['price'] ?? quote['error']} (known ${quote['knownPrice'] ?? '—'})',
+          );
+        }
+        final report = File(
+          'output/cross-highway-investigation/native-probe.json',
+        );
+        await report.parent.create(recursive: true);
+        await report.writeAsString(
+          const JsonEncoder.withIndent('  ').convert({
+            'checkedAt': DateTime.now().toUtc().toIso8601String(),
+            'results': results,
+          }),
+        );
+      } finally {
+        service.dispose();
+      }
+    }, _LiveHttp());
+  }, timeout: const Timeout(Duration(minutes: 3)));
 }
