@@ -28,9 +28,12 @@ and installed license files are the authoritative notices for those packages.
 
 ## Supplied map artwork and operator materials
 
-`assets/map.png` and its reference copy are user-supplied artwork, as recorded
-in [asset provenance](assets/provenance.json). No independent redistribution
-license or copyright ownership for that artwork is documented in this repository.
+`assets/map.png` and its reference copy were supplied by the project maintainer
+from the Virginia Department of Transportation (VDOT) page
+[I-66 Express Lanes Inside the Beltway — About](https://www.vdot.virginia.gov/projects/major-projects/66expresslanes/about/).
+The source is also recorded in [asset provenance](assets/provenance.json).
+No independent redistribution license or copyright ownership for that artwork
+is documented in this repository.
 The project MIT license does not grant rights to that artwork, including map
 content visible in app screenshots. Obtain the relevant permissions before
 reusing the artwork separately.
