@@ -51,7 +51,7 @@ jobs:
         run: flutter pub get --enforce-lockfile
 
       - name: Analyze
-        run: flutter analyze
+        run: flutter analyze --fatal-infos --fatal-warnings
 
       - name: Test
         run: flutter test

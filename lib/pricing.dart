@@ -60,14 +60,17 @@ class PricingService {
     final rampData = jsonDecode(values[1]);
     final outside = jsonDecode(values[2]);
     final outsideMap = jsonDecode(values[3]);
-    if (catalog is! Map ||
-        rampData is! List ||
-        outside is! Map ||
-        outsideMap is! Map) {
+    if (catalog is! Map<Object?, Object?> ||
+        rampData is! List<dynamic> ||
+        outside is! Map<Object?, Object?> ||
+        outsideMap is! Map<Object?, Object?>) {
       throw const FormatException('Pricing assets have an invalid shape.');
     }
     _catalog = _json(catalog);
-    final baseRamps = rampData.whereType<Map>().map(_json).toList();
+    final baseRamps = rampData
+        .whereType<Map<Object?, Object?>>()
+        .map(_json)
+        .toList();
     _outside = Map<String, dynamic>.from(outside);
     _outsideMap = Map<String, dynamic>.from(outsideMap);
     ramps = _enrichOutsideRamps(baseRamps);
@@ -77,8 +80,11 @@ class PricingService {
   Future<List<Json>> entries(String road, String dir) async {
     await _ensureLoaded();
     if (road == '66outside') {
-      return _outside[dir] is List
-          ? (_outside[dir] as List).whereType<Map>().map(_json).toList()
+      return _outside[dir] is List<dynamic>
+          ? (_outside[dir] as List<dynamic>)
+                .whereType<Map<Object?, Object?>>()
+                .map(_json)
+                .toList()
           : <Json>[];
     }
     if (road == '66') {
@@ -89,10 +95,14 @@ class PricingService {
       return _parseOptionsWithCoordinates(response.body);
     }
     final data = _catalog[dir];
-    final source = data is Map ? data['entries'] : null;
-    if (source is! Map) return <Json>[];
+    final source = data is Map<Object?, Object?> ? data['entries'] : null;
+    if (source is! Map<Object?, Object?>) return <Json>[];
     return source.entries
-        .where((e) => e.value is Map && '${e.value['path']}'.startsWith(road))
+        .where(
+          (e) =>
+              e.value is Map<Object?, Object?> &&
+              '${(e.value as Map<Object?, Object?>)['path']}'.startsWith(road),
+        )
         .map((e) => _json(e.value))
         .toList();
   }
@@ -279,37 +289,43 @@ class PricingService {
 
   List<Json> _outsideExits(String dir, String entry) {
     final list = _outside[dir];
-    final selected = list is List
-        ? list.whereType<Map>().cast<Json>().where((e) => e['id'] == entry)
+    final selected = list is List<dynamic>
+        ? list.whereType<Map<Object?, Object?>>().cast<Json>().where(
+            (e) => e['id'] == entry,
+          )
         : const <Json>[];
     final found = selected.isEmpty ? null : selected.first;
     final exits = found?['exits'];
-    if (exits is! List) return <Json>[];
+    if (exits is! List<dynamic>) return <Json>[];
     return [
       for (var i = 0; i < exits.length; i++)
-        if (exits[i] is Map)
+        if (exits[i] is Map<Object?, Object?>)
           _enrichOutsideExit(_json(exits[i]), dir: dir, entry: entry, index: i),
     ];
   }
 
   List<Json> _expressExits(String road, String dir, String entry) {
     final data = _catalog[dir];
-    final entries = data is Map ? data['entries'] : null;
-    final item = entries is Map ? entries[entry] : null;
-    if (item is! Map || !'${item['path']}'.startsWith(road)) {
+    final entries = data is Map<Object?, Object?> ? data['entries'] : null;
+    final item = entries is Map<Object?, Object?> ? entries[entry] : null;
+    if (item is! Map<Object?, Object?> || !'${item['path']}'.startsWith(road)) {
       throw StateError('Unknown entry');
     }
     final exits = item['exits'];
-    if (exits is! List) return <Json>[];
-    final all = data is Map ? data['exits'] : null;
+    if (exits is! List<dynamic>) return <Json>[];
+    final all = data is Map<Object?, Object?> ? data['exits'] : null;
     final direct = <Json>[
       for (final link in exits)
-        if (link is Map && all is Map && all[link['id']] is Map)
+        if (link is Map<Object?, Object?> &&
+            all is Map<Object?, Object?> &&
+            all[link['id']] is Map<Object?, Object?>)
           {
             ..._json(all[link['id']]),
             'ods': link['ods'],
             'road': RegExp(r'^\d+')
-                .firstMatch('${all[link['id']]['path']}')
+                .firstMatch(
+                  '${(all[link['id']] as Map<Object?, Object?>)['path']}',
+                )
                 ?.group(0),
             'direction': dir,
           },
@@ -397,7 +413,7 @@ class PricingService {
         .where((e) => e['id'] == trip['exit'])
         .firstOrNull;
     final connection = destination?['connection'];
-    if (connection is! List) {
+    if (connection is! List<dynamic>) {
       return _errorQuote('${trip['exit']}', 'No verified connection');
     }
     final segments = connection.cast<Json>();
@@ -425,8 +441,13 @@ class PricingService {
         total += amount;
         known = true;
       }
-      if (result['legs'] is List && (result['legs'] as List).isNotEmpty) {
-        legs.addAll((result['legs'] as List).whereType<Map>().map(_json));
+      if (result['legs'] is List<dynamic> &&
+          (result['legs'] as List<dynamic>).isNotEmpty) {
+        legs.addAll(
+          (result['legs'] as List<dynamic>)
+              .whereType<Map<Object?, Object?>>()
+              .map(_json),
+        );
       } else {
         legs.add({
           'road': _roadLabel(segments[i]['road']),
@@ -470,18 +491,19 @@ class PricingService {
   Future<Json> _quoteExpress(Json trip) async {
     final response = await _request(Uri.parse(_expressPricesUrl));
     final source = jsonDecode(response.body);
-    if (source is! Map || source['error']?.toString() != '0') {
+    if (source is! Map<Object?, Object?> ||
+        source['error']?.toString() != '0') {
       throw StateError('Operator pricing unavailable');
     }
     final dir = '${trip['dir']}';
     final directionData = _catalog[dir];
-    final directionEntries = directionData is Map
+    final directionEntries = directionData is Map<Object?, Object?>
         ? directionData['entries']
         : null;
-    final entry = directionEntries is Map
+    final entry = directionEntries is Map<Object?, Object?>
         ? directionEntries[trip['entry']]
         : null;
-    if (entry is! Map) throw StateError('Unknown entry');
+    if (entry is! Map<Object?, Object?>) throw StateError('Unknown entry');
     final id = '${trip['exit']}';
     final allowed = _expressExits('${trip['road']}', dir, '${trip['entry']}');
     final destination = allowed.where((x) => x['id'] == id).firstOrNull;
@@ -490,7 +512,7 @@ class PricingService {
         ? allowed.where((x) => x['id'] == destination['via']).firstOrNull ??
               destination
         : destination;
-    final direct = _directQuote(source, entry, baseDestination);
+    final direct = _directQuote(source, baseDestination);
     if (!id.contains(':')) return _finish(direct, source: 'Express Lanes');
     if (direct['error'] != null) {
       if (id.contains(':')) direct['id'] = id;
@@ -507,7 +529,7 @@ class PricingService {
         ...direct,
         'id': id,
         'legs': [
-          ...?direct['legs'] as List?,
+          ...?direct['legs'] as List<dynamic>?,
           {'road': 'I-66 west regular lanes', 'price': 0},
         ],
         'note': 'Use regular lanes on I-66; no I-66 express toll included',
@@ -520,7 +542,7 @@ class PricingService {
         'id': id,
         'price': (direct['price'] as num) + price,
         'legs': [
-          ...?direct['legs'] as List?,
+          ...?direct['legs'] as List<dynamic>?,
           {'road': 'I-66 east', 'price': price},
         ],
         'note':
@@ -533,7 +555,7 @@ class PricingService {
         'knownPrice': direct['price'],
         'sourceTime': direct['sourceTime'],
         'legs': [
-          ...?direct['legs'] as List?,
+          ...?direct['legs'] as List<dynamic>?,
           {'road': 'I-66 east', 'error': 'Live price unavailable'},
         ],
       }, source: 'Express Lanes');
@@ -544,10 +566,10 @@ class PricingService {
     final results = await Future.wait<Object?>([
       _quoteExpress(trip)
           .then<Object?>((value) => value)
-          .catchError((error) => error),
+          .catchError((Object error) => error),
       _quoteOutside(trip)
           .then<Object?>((value) => value)
-          .catchError((error) => error),
+          .catchError((Object error) => error),
     ]);
     final base = results[0] is Json ? results[0] as Json : null;
     final outside = results[1] is Json ? results[1] as Json : null;
@@ -578,7 +600,7 @@ class PricingService {
         'error': 'Total incomplete',
         'knownPrice': knownPrice,
         'legs': [
-          ...?base['legs'] as List?,
+          ...?base['legs'] as List<dynamic>?,
           {'road': 'I-66 west express', 'error': _outsideError(results[1])},
         ],
       }, source: 'Express Lanes');
@@ -588,7 +610,7 @@ class PricingService {
       'id': trip['exit'],
       'price': (base['price'] as num) + (outside['price'] as num),
       'legs': [
-        ...?base['legs'] as List?,
+        ...?base['legs'] as List<dynamic>?,
         {'road': 'I-66 west express', 'price': outside['price']},
       ],
       'note': outside['note'],
@@ -600,13 +622,15 @@ class PricingService {
     return 'Live I-66 west planner price unavailable';
   }
 
-  Json _directQuote(dynamic source, dynamic entry, Json destination) {
+  Json _directQuote(Map<Object?, Object?> source, Json destination) {
     final rows = <Json>[];
     final response = source['response'];
-    for (final od in (destination['ods'] as List? ?? const [])) {
-      final found = response is List
-          ? response.whereType<Map>().where((r) => r['od'] == 'od_$od')
-          : const <Map>[];
+    for (final od in (destination['ods'] as List<dynamic>? ?? const [])) {
+      final found = response is List<dynamic>
+          ? response.whereType<Map<Object?, Object?>>().where(
+              (r) => r['od'] == 'od_$od',
+            )
+          : const <Map<Object?, Object?>>[];
       if (found.isEmpty) {
         return _errorQuote('${destination['id']}', 'Price unavailable');
       }
@@ -692,7 +716,7 @@ class PricingService {
     for (var i = 0; i < 2; i++) {
       try {
         final body = jsonDecode((await _request(query)).body);
-        final value = body is Map ? body['decToll'] : null;
+        final value = body is Map<Object?, Object?> ? body['decToll'] : null;
         if (value is num && value.isFinite && value >= 0) {
           return value.toDouble();
         }
@@ -733,22 +757,29 @@ class PricingService {
       'Ride66Express returned an unreadable response.',
     );
     final data = payload['data'];
-    dynamic result = data is Map ? data['curl_response'] : null;
+    dynamic result = data is Map<Object?, Object?>
+        ? data['curl_response']
+        : null;
     if (result is String) {
       result = _decodeObject(
         result,
         'Ride66Express returned unreadable pricing data.',
       );
     }
-    final rates = result is Map ? result['rates'] : null;
-    if (rates is! List) throw StateError('The operator returned no rate list.');
+    final rates = result is Map<Object?, Object?> ? result['rates'] : null;
+    if (rates is! List<dynamic>) {
+      throw StateError('The operator returned no rate list.');
+    }
     final components = <Json>[];
     for (final id in {
       ...[route['entry'].toString(), ...ends],
     }) {
       final rows = rates
-          .whereType<Map>()
-          .where((r) => '${(r['gantry'] as Map?)?['gantryId']}' == id)
+          .whereType<Map<Object?, Object?>>()
+          .where(
+            (r) =>
+                '${(r['gantry'] as Map<Object?, Object?>?)?['gantryId']}' == id,
+          )
           .toList();
       if (rows.isEmpty) {
         throw StateError('Rate missing for required I-66 gantry $id.');
@@ -769,8 +800,10 @@ class PricingService {
       }
       final row = rows.first;
       final raw =
-          ((row['gantry'] as Map?)?['vehicleClasses'] as List?)?.firstOrNull;
-      final amount = raw is Map ? raw['rateAmountTag'] : null;
+          ((row['gantry'] as Map<Object?, Object?>?)?['vehicleClasses']
+                  as List<dynamic>?)
+              ?.firstOrNull;
+      final amount = raw is Map<Object?, Object?> ? raw['rateAmountTag'] : null;
       if (!_validAmount(amount)) {
         throw StateError(
           'The operator returned an invalid toll for gantry $id.',
@@ -782,7 +815,9 @@ class PricingService {
         'rateEndDate': row['rateEndDate'],
       });
     }
-    final total = _round(components.fold<double>(0, (s, c) => s + c['price']));
+    final total = _round(
+      components.fold<double>(0, (s, c) => s + (c['price'] as double)),
+    );
     return _finish({
       'id': trip['exit'],
       'price': total,
@@ -810,13 +845,13 @@ class PricingService {
     final catalog = <String, dynamic>{};
     for (final direction in const ['Eastbound', 'Westbound']) {
       final source = _outside[direction];
-      if (source is! List) {
+      if (source is! List<dynamic>) {
         throw FormatException(
           'I-66 outside catalog is missing $direction entries.',
         );
       }
       final enrichedEntries = <Json>[];
-      for (final raw in source.whereType<Map>()) {
+      for (final raw in source.whereType<Map<Object?, Object?>>()) {
         final entry = _json(raw);
         final id = '${entry['id']}';
         final mapped = _outsideMetadata(
@@ -834,11 +869,11 @@ class PricingService {
         enrichedEntries.add(enriched);
         result.add({...enriched, 'exits': null});
         final exits = entry['exits'];
-        if (exits is! List) {
+        if (exits is! List<dynamic>) {
           throw FormatException('I-66 outside entry $id has no exits list.');
         }
         for (var i = 0; i < exits.length; i++) {
-          if (exits[i] is! Map) {
+          if (exits[i] is! Map<Object?, Object?>) {
             throw FormatException(
               'I-66 outside entry $id has an invalid exit at index $i.',
             );
@@ -882,7 +917,7 @@ class PricingService {
 
   String _mapEntryLocation(String id, String direction) {
     final entries = _outsideMap['entries'];
-    final value = entries is Map ? entries[id] : null;
+    final value = entries is Map<Object?, Object?> ? entries[id] : null;
     if (value is! String || value.isEmpty) {
       throw FormatException(
         'I-66 outside map is missing entry $id ($direction).',
@@ -893,7 +928,7 @@ class PricingService {
 
   String _mapExitLocation(String label, String direction) {
     final exits = _outsideMap['exits'];
-    final value = exits is Map ? exits[label] : null;
+    final value = exits is Map<Object?, Object?> ? exits[label] : null;
     if (value is! String || value.isEmpty) {
       throw FormatException(
         'I-66 outside map is missing exit "$label" ($direction).',
@@ -908,8 +943,10 @@ class PricingService {
     required String description,
   }) {
     final locations = _outsideMap['locations'];
-    final location = locations is Map ? locations[locationKey] : null;
-    if (location is! Map) {
+    final location = locations is Map<Object?, Object?>
+        ? locations[locationKey]
+        : null;
+    if (location is! Map<Object?, Object?>) {
       throw FormatException(
         'I-66 outside map has no location "$locationKey" for $description.',
       );
@@ -954,16 +991,16 @@ class PricingService {
     final dir = '${trip['dir']}';
     if ('${trip['road']}' == '66outside') {
       final entries = _outside[dir];
-      final entry = entries is List
+      final entry = entries is List<dynamic>
           ? entries
-                .whereType<Map>()
+                .whereType<Map<Object?, Object?>>()
                 .where((e) => e['id'] == trip['entry'])
                 .firstOrNull
           : null;
       final exits = entry?['exits'];
-      final selected = exits is List
+      final selected = exits is List<dynamic>
           ? exits
-                .whereType<Map>()
+                .whereType<Map<Object?, Object?>>()
                 .where(
                   (e) =>
                       'o66:${trip['entry']}:${exits.indexOf(e)}' ==
@@ -1050,8 +1087,10 @@ class PricingService {
     final timestamps = <dynamic>[];
     if (result['sourceTime'] != null) timestamps.add(result['sourceTime']);
     final legs = result['legs'];
-    if (legs is List) {
-      timestamps.addAll(legs.whereType<Map>().map((leg) => leg['sourceTime']));
+    if (legs is List<dynamic>) {
+      timestamps.addAll(
+        legs.whereType<Map<Object?, Object?>>().map((leg) => leg['sourceTime']),
+      );
     }
     final warning = _freshnessWarning(timestamps);
     if (warning != null) result['warning'] = warning;
@@ -1084,12 +1123,13 @@ class PricingService {
       double.tryParse('$value') != null &&
       double.parse('$value') >= 0;
   double _round(double value) => (value * 100).roundToDouble() / 100;
-  Json _json(dynamic value) => Map<String, dynamic>.from(value as Map);
+  Json _json(dynamic value) =>
+      Map<String, dynamic>.from(value as Map<Object?, Object?>);
 
   Json _decodeObject(String value, String message) {
     try {
       final decoded = jsonDecode(value);
-      if (decoded is Map) return _json(decoded);
+      if (decoded is Map<Object?, Object?>) return _json(decoded);
     } on FormatException {
       // Use one stable service error for malformed operator responses.
     }

@@ -1,10 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'planner_controller.dart';
 import 'pricing.dart';
 import 'screens/manual_route_page.dart';
-import 'screens/saved_trips_page.dart';
 import 'screens/map_route_page.dart';
+import 'screens/saved_trips_page.dart';
 import 'widgets/route_picker.dart';
 import 'widgets/source_sheet.dart';
 
@@ -27,7 +29,7 @@ class _PlannerPageState extends State<PlannerPage> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     controller = PlannerController(service: widget.service)
       ..addListener(_changed);
-    controller.initialize();
+    unawaited(controller.initialize());
   }
 
   void _changed() {

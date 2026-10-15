@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -378,35 +379,39 @@ class _RouteMapState extends State<RouteMap> {
         )
         .toList();
     if (overlap.length > 1) {
-      showModalBottomSheet<void>(
-        context: context,
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        builder: (context) {
-          return SafeArea(
-            child: ListView(
-              shrinkWrap: true,
-              padding: const EdgeInsets.all(16),
-              children: [
-                Text(
-                  'Choose the ramp at this point',
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w700,
-                    color: Theme.of(context).colorScheme.onSurface,
+      unawaited(
+        showModalBottomSheet<void>(
+          context: context,
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          builder: (context) {
+            return SafeArea(
+              child: ListView(
+                shrinkWrap: true,
+                padding: const EdgeInsets.all(16),
+                children: [
+                  Text(
+                    'Choose the ramp at this point',
+                    style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w700,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
                   ),
-                ),
-                for (final candidate in overlap)
-                  ListTile(
-                    title: Text('${_road(candidate.road)} · ${candidate.name}'),
-                    onTap: () {
-                      Navigator.pop(context);
-                      widget.onChoose(candidate.records);
-                    },
-                  ),
-              ],
-            ),
-          );
-        },
+                  for (final candidate in overlap)
+                    ListTile(
+                      title: Text(
+                        '${_road(candidate.road)} · ${candidate.name}',
+                      ),
+                      onTap: () {
+                        Navigator.pop(context);
+                        widget.onChoose(candidate.records);
+                      },
+                    ),
+                ],
+              ),
+            );
+          },
+        ),
       );
     } else {
       widget.onChoose(point.records);

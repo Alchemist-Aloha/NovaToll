@@ -21,7 +21,8 @@ class TripEstimate extends StatelessWidget {
     final roads = <String>{
       '${trip?['road'] ?? ''}',
       ...routeRoads,
-      for (final road in (quote?['roads'] as List? ?? const [])) '$road',
+      for (final road in (quote?['roads'] as List<dynamic>? ?? const []))
+        '$road',
     };
     return [
       if (roads.any({'495', '95', '395'}.contains))
@@ -85,7 +86,9 @@ class TripEstimate extends StatelessWidget {
           note(warning),
         if (q?['note'] case final String value when value.isNotEmpty)
           note(value),
-        for (final leg in (q?['legs'] as List? ?? const []))
+        for (final leg
+            in (q?['legs'] as List<dynamic>? ?? const [])
+                .cast<Map<String, dynamic>>())
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 6),
             child: Row(

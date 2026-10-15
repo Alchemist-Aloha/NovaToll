@@ -100,7 +100,11 @@ class _MapRoutePageState extends State<MapRoutePage> {
         : c.choosingEntry
         ? null
         : c.mapRoutes
-              .expand((r) => (r['exits'] as List).map((e) => e['id'] as String))
+              .expand(
+                (r) => (r['exits'] as List<dynamic>).cast<Json>().map(
+                  (e) => e['id'] as String,
+                ),
+              )
               .toSet(),
     bottomPadding: bottomPadding,
   );
@@ -240,7 +244,8 @@ class _MapRoutePageState extends State<MapRoutePage> {
                         )
                       else
                         Text(
-                          c.quote?['error'] ?? 'Estimate unavailable',
+                          c.quote?['error'] as String? ??
+                              'Estimate unavailable',
                           style: text.titleLarge,
                         ),
                     ],
@@ -325,7 +330,7 @@ class _MapRoutePageState extends State<MapRoutePage> {
       stop(
         'B',
         'Exit',
-        c.trip?['exitLabel'] ?? 'Choose your destination',
+        c.trip?['exitLabel'] as String? ?? 'Choose your destination',
         false,
       ),
       if (hasEstimate) ...[

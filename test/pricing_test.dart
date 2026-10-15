@@ -105,7 +105,10 @@ void main() {
       'exit': '181ND',
     });
     expect(quote['price'], 4.25);
-    expect((quote['legs'] as List).single['road'], 'I-495');
+    expect(
+      (quote['legs'] as List<dynamic>).cast<Json>().single['road'],
+      'I-495',
+    );
     expect(quote['fetchedAt'], isA<String>());
     expect(quote['source'], 'Express Lanes');
   });
@@ -174,7 +177,7 @@ void main() {
     ]) {
       final service = _expressFixture({
         'error': '0',
-        'response': row['missing'] == true ? [] : [row],
+        'response': row['missing'] == true ? <Json>[] : <Json>[row],
       });
       await service.load();
       final quote = await service.quote({
@@ -217,7 +220,10 @@ void main() {
       expect(quote['id'], '66w:50');
       expect(quote['error'], 'Total incomplete');
       expect(quote['knownPrice'], 3.0);
-      expect((quote['legs'] as List).last['road'], 'I-66 west express');
+      expect(
+        (quote['legs'] as List<dynamic>).cast<Json>().last['road'],
+        'I-66 west express',
+      );
     },
   );
 
@@ -287,7 +293,10 @@ void main() {
       });
       expect(quote['price'], 9.0);
       expect(quote['error'], isNull);
-      expect((quote['legs'] as List).last['road'], 'I-66 west express');
+      expect(
+        (quote['legs'] as List<dynamic>).cast<Json>().last['road'],
+        'I-66 west express',
+      );
       expect(quote['note'], contains('historical-average'));
     },
   );
@@ -326,11 +335,14 @@ void main() {
     });
     expect(quote['error'], 'Total incomplete');
     expect(quote['knownPrice'], 3.0);
-    expect((quote['legs'] as List).last['error'], contains('HTTP 403'));
+    expect(
+      (quote['legs'] as List<dynamic>).cast<Json>().last['error'],
+      contains('HTTP 403'),
+    );
   });
 
   test('rejects an unknown route before asking the operator', () async {
-    final service = _expressFixture({'error': '0', 'response': []});
+    final service = _expressFixture({'error': '0', 'response': <Json>[]});
     await service.load();
     final quote = await service.quote({
       'road': '495',

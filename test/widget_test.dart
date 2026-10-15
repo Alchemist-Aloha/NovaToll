@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:nova_toll/main.dart';
-import 'package:nova_toll/pricing.dart';
 import 'package:nova_toll/planner_controller.dart';
+import 'package:nova_toll/pricing.dart';
 import 'package:nova_toll/route_map.dart';
 import 'package:nova_toll/widgets/trip_estimate.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tzdata;
 
 class FakePricing extends PricingService {
@@ -207,7 +207,7 @@ void main() {
       trip: {'road': '495', 'entry': 'a', 'exit': '66e:3'},
       quote: {
         'roads': ['495', '95', '395', '66', '66outside'],
-        'legs': const [],
+        'legs': const <Json>[],
       },
     );
     expect(find.text('Official toll check websites'), findsOneWidget);

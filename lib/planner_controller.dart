@@ -60,8 +60,9 @@ class PlannerController extends ChangeNotifier {
     final records = <Json>[...service.ramps];
     for (final route in mapRoutes) {
       final destinations = route['exits'];
-      if (destinations is! List) continue;
-      for (final destination in destinations.whereType<Map>()) {
+      if (destinations is! List<dynamic>) continue;
+      for (final destination
+          in destinations.whereType<Map<Object?, Object?>>()) {
         final id = destination['id'];
         if (id is! String || !id.contains(':')) continue;
         if (service.ramps.any(
@@ -103,9 +104,9 @@ class PlannerController extends ChangeNotifier {
         final decoded = jsonDecode(
           _preferences!.getString(_storageKey) ?? '[]',
         );
-        if (decoded is List) {
+        if (decoded is List<dynamic>) {
           saved = decoded
-              .whereType<Map>()
+              .whereType<Map<Object?, Object?>>()
               .map((e) => Map<String, dynamic>.from(e))
               .where(_validSaved)
               .toList();
@@ -214,8 +215,8 @@ class PlannerController extends ChangeNotifier {
       final token = ++_mapGeneration;
       ++_priceGeneration;
       _update(() {
-        mapEntryId = candidates.first['id'];
-        mapOriginLabel = candidates.first['label'];
+        mapEntryId = candidates.first['id'] as String?;
+        mapOriginLabel = candidates.first['label'] as String?;
         mapExitId = null;
         trip = null;
         quote = null;
@@ -228,9 +229,9 @@ class PlannerController extends ChangeNotifier {
         candidates.map((r) async {
           try {
             final destinations = await service.exits(
-              r['road'] ?? r['group'],
-              r['direction'],
-              r['id'],
+              (r['road'] ?? r['group']) as String,
+              r['direction'] as String,
+              r['id'] as String,
             );
             return <String, dynamic>{
               'road': r['road'] ?? r['group'],
@@ -249,15 +250,17 @@ class PlannerController extends ChangeNotifier {
         mapRoutes = routes.whereType<Json>().toList();
         choosingEntry = false;
         mapBusy = false;
-        notice = mapRoutes.any((r) => (r['exits'] as List).isNotEmpty) ? '' : 'Destinations are unavailable for this entry. Try Manual / GPS or another ramp.';
+        notice = mapRoutes.any((r) => (r['exits'] as List<dynamic>).isNotEmpty)
+            ? ''
+            : 'Destinations are unavailable for this entry. Try Manual / GPS or another ramp.';
       });
       return;
     }
     final matches = <Json>[];
     for (final route in mapRoutes) {
       final destinations = route['exits'];
-      if (destinations is! List) continue;
-      for (final dest in destinations.whereType<Map>()) {
+      if (destinations is! List<dynamic>) continue;
+      for (final dest in destinations.whereType<Map<Object?, Object?>>()) {
         if (records.any(
           (r) =>
               r['id'] == dest['id'] &&
@@ -317,11 +320,11 @@ class PlannerController extends ChangeNotifier {
       mapBusy = false;
       if (!preserveRoutes) mapRoutes = <Json>[];
       choosingEntry = !preserveRoutes;
-      mapEntryId = next['entry'];
-      mapExitId = next['exit'];
-      mapOriginLabel = next['entryLabel'];
+      mapEntryId = next['entry'] as String?;
+      mapExitId = next['exit'] as String?;
+      mapOriginLabel = next['entryLabel'] as String?;
     });
-    refresh();
+    unawaited(refresh());
   }
 
   Future<void> refresh() async {
@@ -445,12 +448,12 @@ class PlannerController extends ChangeNotifier {
             );
       if (_disposed || selected == null) return;
       _update(() {
-        road = selected['road'] ?? selected['group'];
-        direction = selected['direction'];
+        road = (selected['road'] ?? selected['group']) as String;
+        direction = selected['direction'] as String;
         gpsStatus =
             'Suggested entry: ${selected['label']}. ${headingValid ? 'Check the entry and direction.' : 'Confirm the travel direction manually.'} Then choose your destination.';
       });
-      await loadEntries(suggested: selected['id']);
+      await loadEntries(suggested: selected['id'] as String);
     } catch (e) {
       if (!_disposed) _update(() => gpsStatus = _cleanError(e));
     } finally {
@@ -465,9 +468,11 @@ class PlannerController extends ChangeNotifier {
       road = '${selected['road']}';
       direction = '${selected['dir']}';
     });
-    _loadEntries(
-      suggested: '${selected['entry']}',
-      restoreExit: '${selected['exit']}',
+    unawaited(
+      _loadEntries(
+        suggested: '${selected['entry']}',
+        restoreExit: '${selected['exit']}',
+      ),
     );
   }
 
@@ -477,7 +482,7 @@ class PlannerController extends ChangeNotifier {
       direction = value.startsWith('66') ? 'Eastbound' : 'Northbound';
       notice = '';
     });
-    loadEntries();
+    unawaited(loadEntries());
   }
 
   void selectDirection(String value) {
@@ -485,7 +490,7 @@ class PlannerController extends ChangeNotifier {
       direction = value;
       notice = '';
     });
-    loadEntries();
+    unawaited(loadEntries());
   }
 
   void selectExit(String value) => _update(() => exit = value);
@@ -539,7 +544,7 @@ class PlannerController extends ChangeNotifier {
         resultVisible &&
         trip != null &&
         !pricingBusy) {
-      refresh();
+      unawaited(refresh());
     }
   }
 
@@ -556,7 +561,7 @@ class PlannerController extends ChangeNotifier {
     final selectedEntry = '${selected['entry']}';
     _update(() {
       mapEntryId = selectedEntry;
-      mapOriginLabel = selected['entryLabel'];
+      mapOriginLabel = selected['entryLabel'] as String?;
       mapBusy = true;
     });
     try {

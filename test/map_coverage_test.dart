@@ -44,11 +44,10 @@ void main() {
     });
     service = PricingService(client: client);
     await service.load();
-    locations = Map<String, dynamic>.from(
-      jsonDecode(
-        await rootBundle.loadString('assets/outside66_map.json'),
-      )['locations'],
-    );
+    final map = jsonDecode(
+      await rootBundle.loadString('assets/outside66_map.json'),
+    ) as Json;
+    locations = (map['locations'] as Map).cast<String, dynamic>();
   });
   tearDownAll(() {
     service.dispose();
@@ -58,12 +57,13 @@ void main() {
   test(
     'all bundled Express Lanes entries and exits have matching map records',
     () async {
-      final catalog =
-          jsonDecode(await rootBundle.loadString('assets/catalog.json')) as Map;
+      final catalog = (jsonDecode(
+        await rootBundle.loadString('assets/catalog.json'),
+      ) as Map).cast<String, dynamic>();
       for (final direction in catalog.keys) {
-        final data = catalog[direction] as Map;
+        final data = catalog[direction] as Json;
         for (final kind in {'entries': 'entry', 'exits': 'exit'}.entries) {
-          for (final record in (data[kind.key] as Map).values.cast<Map>()) {
+          for (final record in (data[kind.key] as Json).values.cast<Json>()) {
             final road = [
               '495',
               '395',
@@ -111,8 +111,8 @@ void main() {
         await controller.selectMap([entry], choose);
         final exits = await service.exits(
           '66outside',
-          entry['direction'],
-          entry['id'],
+          '${entry['direction']}',
+          '${entry['id']}',
         );
         expect(controller.mapRoutes.single['entry'], entry['id']);
         expect(
@@ -197,8 +197,8 @@ void main() {
         final position = MatrixUtils.transformPoint(
           matrix,
           Offset(
-            (entry.value['x'] as num).toDouble(),
-            (entry.value['y'] as num).toDouble(),
+            ((entry.value as Json)['x'] as num).toDouble(),
+            ((entry.value as Json)['y'] as num).toDouble(),
           ),
         );
         expect(tester.getCenter(marker).dx, closeTo(position.dx, .01));

@@ -83,7 +83,6 @@ Location is optional and requested for a one-time entry suggestion. Your coordin
 ## Contributing
 
 For development setup, build commands, and testing guidance, see [Repository Guidelines](AGENTS.md).
-For GitHub Actions signing setup and APK downloads, see [Android builds](docs/android-builds.md).
 
 ## License
 

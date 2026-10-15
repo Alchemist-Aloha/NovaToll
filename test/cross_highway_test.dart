@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
-import 'package:nova_toll/pricing.dart';
 import 'package:nova_toll/planner_controller.dart';
+import 'package:nova_toll/pricing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class _CrossFixtureClient extends http.BaseClient {
@@ -29,15 +29,16 @@ class _CrossFixtureClient extends http.BaseClient {
 
     if (request.url.host == 'expresslanes.com') {
       if (failExpress) return _response('unavailable', 503, request);
-      final catalog =
-          jsonDecode(await rootBundle.loadString('assets/catalog.json')) as Map;
+      final catalog = (jsonDecode(
+        await rootBundle.loadString('assets/catalog.json'),
+      ) as Map).cast<String, dynamic>();
       final ods = <String>{};
-      for (final direction in catalog.values.whereType<Map>()) {
+      for (final direction in catalog.values.whereType<Json>()) {
         final entries = direction['entries'];
         if (entries is Map) {
-          for (final entry in entries.values.whereType<Map>()) {
+          for (final entry in entries.values.whereType<Json>()) {
             for (final exit in (entry['exits'] as List? ?? const [])) {
-              if (exit is Map) {
+              if (exit is Json) {
                 ods.addAll(
                   (exit['ods'] as List? ?? const []).map((value) => '$value'),
                 );
@@ -63,16 +64,19 @@ class _CrossFixtureClient extends http.BaseClient {
       final handler = request.url.queryParameters['handler'];
       if (handler != 'TollCalcPartial') {
         final east = request.url.queryParameters['rbEastVal'] == 'true';
-        final catalog = jsonDecode(
-          await File('test/fixtures/i66_catalog.json').readAsString(),
-        )['directions'][east ? 'Eastbound' : 'Westbound'];
+        final fixture =
+            (jsonDecode(
+                  await File('test/fixtures/i66_catalog.json').readAsString(),
+                ) as Json)['directions']
+                as Json;
+        final catalog = fixture[east ? 'Eastbound' : 'Westbound'] as Json;
         final options = handler == 'ExitIntPartial'
-            ? catalog['exits'][request.url.queryParameters['bIntId']]
+            ? (catalog['exits'] as Json)[request.url.queryParameters['bIntId']]
             : catalog['entries'];
         return _response(
           [
             for (final option in options as List? ?? [])
-              '<option value="${option['id']}">${option['label']}</option>',
+              '<option value="${(option as Json)['id']}">${option['label']}</option>',
           ].join(),
           200,
           request,
@@ -138,17 +142,19 @@ void main() {
       final client = _CrossFixtureClient();
       final service = PricingService(client: client);
       await service.load();
-      final catalog =
-          jsonDecode(await rootBundle.loadString('assets/catalog.json')) as Map;
+      final catalog = (jsonDecode(
+        await rootBundle.loadString('assets/catalog.json'),
+      ) as Map).cast<String, dynamic>();
 
       for (final direction in const ['Northbound', 'Southbound']) {
-        final directionData = catalog[direction] as Map;
-        final entries = directionData['entries'] as Map;
+        final directionData = catalog[direction] as Json;
+        final entries = directionData['entries'] as Json;
         for (final item in entries.entries) {
+          final itemData = item.value as Json;
           final road = RegExp(r'^\d+')
-              .firstMatch('${item.value['path']}')!
+              .firstMatch('${itemData['path']}')!
               .group(0)!;
-          final exits = await service.exits(road, direction, '${item.key}');
+          final exits = await service.exits(road, direction, item.key);
           expect(exits, isNotEmpty, reason: '$direction $road ${item.key}');
           for (final exit in exits.where((e) => !'${e['id']}'.contains(':'))) {
             final quote = await service.quote({
@@ -179,25 +185,25 @@ void main() {
       await service.load();
       final express =
           jsonDecode(await rootBundle.loadString('assets/catalog.json')) as Map;
-      final outside = jsonDecode(
+      final outside = (jsonDecode(
         await rootBundle.loadString('assets/outside66.json'),
-      ) as Map;
+      ) as Map).cast<String, dynamic>();
       double segmentPrice(Json segment) {
         if (segment['road'] == '66') return 1;
         if (segment['road'] == '66outside') {
           final entry = (outside[segment['dir']] as List)
-              .cast<Map>()
+              .cast<Json>()
               .singleWhere((e) => e['id'] == segment['entry']);
           final index = int.parse('${segment['exit']}'.split(':').last);
-          final exit = entry['exits'][index] as Map;
+          final exit = (entry['exits'] as List<dynamic>).cast<Json>()[index];
           return <String>{
             '${entry['id']}',
             ...'${exit['gantries']}'.split(','),
           }.length.toDouble();
         }
-        final entry =
-            express[segment['dir']]['entries'][segment['entry']] as Map;
-        final exit = (entry['exits'] as List).cast<Map>().singleWhere(
+        final direction = express[segment['dir']] as Json;
+        final entry = (direction['entries'] as Json)[segment['entry']] as Json;
+        final exit = (entry['exits'] as List).cast<Json>().singleWhere(
           (e) => e['id'] == segment['exit'],
         );
         return (exit['ods'] as List).length.toDouble();
@@ -210,7 +216,11 @@ void main() {
             : ['Northbound', 'Southbound'];
         for (final direction in directions) {
           for (final entry in await service.entries(road, direction)) {
-            final exits = await service.exits(road, direction, entry['id']);
+            final exits = await service.exits(
+              road,
+              direction,
+              '${entry['id']}',
+            );
             for (final exit in exits.where((e) => '${e['id']}'.contains(':'))) {
               final trip = <String, dynamic>{
                 'road': road,
@@ -221,7 +231,7 @@ void main() {
               final quote = await service.quote(trip);
               expect(quote['error'], isNull, reason: '$trip');
               double expected;
-              if (exit['connection'] case final List connection) {
+              if (exit['connection'] case final List<dynamic> connection) {
                 expected = connection.cast<Json>().fold<double>(
                   0,
                   (sum, segment) => sum + segmentPrice(segment),
@@ -308,7 +318,7 @@ void main() {
           isNotNull,
           reason: '${c['road']} ${c['dir']} ${c['entry']}',
         );
-        expect(route!['connection'], isA<List>());
+        expect(route!['connection'], isA<List<dynamic>>());
         final quote = await service.quote({
           'road': c['road'],
           'dir': c['dir'],
@@ -332,7 +342,7 @@ void main() {
         ('66outside', 'Westbound'),
       ]) {
         for (final entry in await service.entries(road, direction)) {
-          final exits = await service.exits(road, direction, entry['id']);
+          final exits = await service.exits(road, direction, '${entry['id']}');
           expect(exits.any((e) => '${e['id']}'.startsWith('via:')), isFalse);
         }
       }
@@ -398,7 +408,8 @@ void main() {
       (e) =>
           '${e['id']}'.startsWith('via:') &&
           '${e['id']}'.contains('66outside') &&
-          (e['connection'] as List).first['entry'] == '16',
+          (e['connection'] as List<dynamic>).cast<Json>().first['entry'] ==
+              '16',
     );
     final quote = await service.quote({
       'road': '66',
@@ -452,7 +463,12 @@ void main() {
         expect(quote['error'], 'Total incomplete');
         expect(quote['price'], isNull);
         expect(quote['knownPrice'], known);
-        expect((quote['legs'] as List).any((e) => e['error'] != null), isTrue);
+        expect(
+          (quote['legs'] as List<dynamic>).cast<Json>().any(
+            (e) => e['error'] != null,
+          ),
+          isTrue,
+        );
       }
     },
   );
