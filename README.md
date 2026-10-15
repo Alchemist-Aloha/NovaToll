@@ -4,6 +4,27 @@ Northern Virginia’s dynamic express-lane tolls can be surprisingly high. Plann
 
 Nova Toll for Android addresses both problems with robust cross-highway toll estimates. Choose your entry and exit on the map to combine available operator estimates for supported connections, review each segment’s cost, and save routes you use often. Missing prices and incomplete totals are clearly flagged so you can make an informed choice before entering the lanes.
 
+See the [Nova Toll showcase](https://alchemist-aloha.github.io/NovaToll/) for a visual tour of the app.
+
+## See Nova Toll in action
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="assets/manual_plan.jpg" alt="Manual route planner with highway, direction, entry, and destination controls" width="250">
+      <br><em>Plan a route manually</em>
+    </td>
+    <td align="center">
+      <img src="assets/toll_estimate.jpg" alt="Map view showing a Nova Toll trip estimate and route segments" width="250">
+      <br><em>Review the toll estimate</em>
+    </td>
+    <td align="center">
+      <img src="assets/saved_routes.jpg" alt="Saved trips screen with reusable cross-highway routes" width="250">
+      <br><em>Save frequent routes</em>
+    </td>
+  </tr>
+</table>
+
 ## Coverage
 
 - **I-495, I-95, and I-395 Express Lanes**
@@ -63,3 +84,11 @@ Location is optional and requested for a one-time entry suggestion. Your coordin
 
 For development setup, build commands, and testing guidance, see [Repository Guidelines](AGENTS.md).
 For GitHub Actions signing setup and APK downloads, see [Android builds](docs/android-builds.md).
+
+## License
+
+Nova Toll's original code and documentation are available under the [MIT License](LICENSE),
+which allows reuse, modification, and redistribution while retaining the copyright
+and license notice. Bundled fonts use SIL OFL 1.1, and supplied map artwork is not
+covered by MIT. See [third-party notices](THIRD_PARTY_NOTICES.md) for attribution
+and asset licensing details.
