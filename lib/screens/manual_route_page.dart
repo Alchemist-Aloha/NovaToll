@@ -89,11 +89,6 @@ class ManualRoutePage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  'Set your route',
-                  style: Theme.of(context).textTheme.headlineSmall,
-                ),
-                const SizedBox(height: 8),
-                Text(
                   'Choose the original entry where your express-lane trip begins.',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
@@ -194,6 +189,28 @@ class ManualRoutePage extends StatelessWidget {
                   'Includes verified connections beyond the starting highway. GP = general-purpose lanes; EL = Express Lanes.',
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
+                if (c.notice.isNotEmpty && !c.mapBusy)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12),
+                    child: Material(
+                      color: scheme.errorContainer,
+                      borderRadius: BorderRadius.circular(12),
+                      child: ListTile(
+                        title: Text(
+                          c.notice,
+                          style: TextStyle(color: scheme.onErrorContainer),
+                        ),
+                        trailing: IconButton(
+                          tooltip: 'Dismiss notice',
+                          onPressed: c.dismissNotice,
+                          icon: Icon(
+                            Icons.close,
+                            color: scheme.onErrorContainer,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 const SizedBox(height: 18),
                 FilledButton(
                   onPressed: c.manualBusy || c.entry == null || c.exit == null
@@ -220,7 +237,7 @@ class ManualRoutePage extends StatelessWidget {
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                         const SizedBox(height: 14),
-                        FilledButton.icon(
+                        FilledButton.tonalIcon(
                           onPressed: c.gpsBusy ? null : () => c.useGps(choose),
                           icon: c.gpsBusy
                               ? const SizedBox.square(
@@ -257,28 +274,6 @@ class ManualRoutePage extends StatelessWidget {
                     ),
                   ),
                 ),
-                if (c.notice.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 16),
-                    child: Material(
-                      color: scheme.errorContainer,
-                      borderRadius: BorderRadius.circular(12),
-                      child: ListTile(
-                        title: Text(
-                          c.notice,
-                          style: TextStyle(color: scheme.onErrorContainer),
-                        ),
-                        trailing: IconButton(
-                          tooltip: 'Dismiss notice',
-                          onPressed: c.dismissNotice,
-                          icon: Icon(
-                            Icons.close,
-                            color: scheme.onErrorContainer,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
               ],
             ),
           ),

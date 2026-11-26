@@ -540,23 +540,26 @@ class _RouteMapState extends State<RouteMap> {
                       left: 12,
                       right: 72,
                       bottom: 12 + widget.bottomPadding,
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: colors.surfaceContainerHighest.withValues(
-                            alpha: .92,
+                      child: Align(
+                        alignment: Alignment.bottomLeft,
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: colors.surfaceContainerHighest.withValues(
+                              alpha: .92,
+                            ),
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
                           ),
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 9,
-                            vertical: 5,
-                          ),
-                          child: Text(
-                            'Illustrative map · not to scale',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: colors.onSurface,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 9,
+                              vertical: 5,
+                            ),
+                            child: Text(
+                              'Illustrative map · not to scale',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: colors.onSurface,
+                              ),
                             ),
                           ),
                         ),
