@@ -92,7 +92,6 @@ class _PlannerPageState extends State<PlannerPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
     return LayoutBuilder(
       builder: (context, bounds) {
         final expanded = bounds.maxWidth >= 840;
@@ -139,9 +138,6 @@ class _PlannerPageState extends State<PlannerPage> with WidgetsBindingObserver {
           child: Scaffold(
             resizeToAvoidBottomInset: destination != 0,
             appBar: AppBar(
-              leading: destination == 0
-                  ? Icon(Icons.explore_outlined, color: colors.primary)
-                  : null,
               title: Text(
                 ['Nova Toll', 'Plan a route', 'Saved trips'][destination],
               ),

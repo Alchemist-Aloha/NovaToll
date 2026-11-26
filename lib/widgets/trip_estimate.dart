@@ -96,7 +96,7 @@ class TripEstimate extends StatelessWidget {
               children: [
                 Expanded(child: Text('${leg['road'] ?? 'Road segment'}')),
                 const SizedBox(width: 12),
-                Flexible(
+                Expanded(
                   child: Text(
                     leg['price'] is num
                         ? money(leg['price'])
@@ -116,15 +116,17 @@ class TripEstimate extends StatelessWidget {
           Text('Source: ${q!['source']}', style: theme.textTheme.bodySmall),
         const SizedBox(height: 16),
         FilledButton.icon(
-          onPressed: c.pricingBusy ? null : c.refresh,
-          icon: const Icon(Icons.refresh),
-          label: const Text('Refresh price'),
+          onPressed: c.tripSaved ? null : c.saveTrip,
+          icon: Icon(
+            c.tripSaved ? Icons.bookmark_added : Icons.bookmark_border,
+          ),
+          label: Text(c.tripSaved ? 'Trip saved' : 'Save this trip'),
         ),
         const SizedBox(height: 8),
         FilledButton.tonalIcon(
-          onPressed: c.tripSaved ? null : c.saveTrip,
-          icon: const Icon(Icons.bookmark_border),
-          label: Text(c.tripSaved ? 'Trip saved' : 'Save this trip'),
+          onPressed: c.pricingBusy ? null : c.refresh,
+          icon: const Icon(Icons.refresh),
+          label: Text(c.pricingBusy ? 'Checking price…' : 'Refresh price'),
         ),
         TextButton.icon(
           onPressed: onEdit,

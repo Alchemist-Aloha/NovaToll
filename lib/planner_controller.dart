@@ -252,7 +252,7 @@ class PlannerController extends ChangeNotifier {
         mapBusy = false;
         notice = mapRoutes.any((r) => (r['exits'] as List<dynamic>).isNotEmpty)
             ? ''
-            : 'Destinations are unavailable for this entry. Try Manual / GPS or another ramp.';
+            : 'Destinations are unavailable for this entry. Try another ramp, or choose by road on the Route tab.';
       });
       return;
     }
@@ -535,6 +535,12 @@ class PlannerController extends ChangeNotifier {
     _update(
       () => saved.removeWhere((item) => _tripKey(item) == _tripKey(value)),
     );
+    await _persist();
+  }
+
+  Future<void> restoreTrip(Json value, int index) async {
+    if (saved.any((item) => _tripKey(item) == _tripKey(value))) return;
+    _update(() => saved.insert(index.clamp(0, saved.length), value));
     await _persist();
   }
 

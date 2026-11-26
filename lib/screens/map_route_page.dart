@@ -267,7 +267,7 @@ class _MapRoutePageState extends State<MapRoutePage> {
                 c.clearTrip();
                 expandTo(.40);
               },
-              icon: const Icon(Icons.restart_alt),
+              icon: const Icon(Icons.close),
             ),
           if (draggable)
             IconButton(
@@ -326,13 +326,8 @@ class _MapRoutePageState extends State<MapRoutePage> {
           ),
         ),
       const SizedBox(height: 12),
-      stop('A', 'Entry', c.mapOriginLabel ?? 'Choose a starting ramp', true),
-      stop(
-        'B',
-        'Exit',
-        c.trip?['exitLabel'] as String? ?? 'Choose your destination',
-        false,
-      ),
+      stop('A', 'Entry', c.mapOriginLabel, true),
+      stop('B', 'Exit', c.trip?['exitLabel'] as String?, false),
       if (hasEstimate) ...[
         const SizedBox(height: 8),
         Text(
@@ -357,8 +352,9 @@ class _MapRoutePageState extends State<MapRoutePage> {
     ];
   }
 
-  Widget stop(String letter, String label, String value, bool entry) {
+  Widget stop(String letter, String label, String? value, bool entry) {
     final colors = Theme.of(context).colorScheme;
+    final text = Theme.of(context).textTheme;
     return ListTile(
       contentPadding: EdgeInsets.zero,
       leading: CircleAvatar(
@@ -371,8 +367,16 @@ class _MapRoutePageState extends State<MapRoutePage> {
             : colors.onTertiaryContainer,
         child: Text(letter),
       ),
-      title: Text(value),
-      subtitle: Text(label),
+      title: Text(
+        label,
+        style: text.labelMedium?.copyWith(color: colors.onSurfaceVariant),
+      ),
+      subtitle: Text(
+        value ?? (entry ? 'Choose a starting ramp' : 'Choose your destination'),
+        style: text.bodyLarge?.copyWith(
+          color: value == null ? colors.onSurfaceVariant : colors.onSurface,
+        ),
+      ),
       trailing: const Icon(Icons.chevron_right),
       onTap: () => chooseStop(entry),
     );

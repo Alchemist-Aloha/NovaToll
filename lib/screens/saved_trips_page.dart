@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../formatting.dart';
@@ -70,7 +72,21 @@ class SavedTripsPage extends StatelessWidget {
               trailing: IconButton(
                 constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
                 tooltip: 'Delete saved trip',
-                onPressed: () => controller.deleteTrip(trip),
+                onPressed: () {
+                  final index = controller.saved.indexOf(trip);
+                  unawaited(controller.deleteTrip(trip));
+                  ScaffoldMessenger.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(
+                      SnackBar(
+                        content: const Text('Trip deleted'),
+                        action: SnackBarAction(
+                          label: 'Undo',
+                          onPressed: () => controller.restoreTrip(trip, index),
+                        ),
+                      ),
+                    );
+                },
                 icon: const Icon(Icons.delete_outline),
               ),
             ),

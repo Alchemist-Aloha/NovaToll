@@ -55,7 +55,7 @@ class _RoutePickerState extends State<_RoutePicker> {
                     ),
                   ),
                   IconButton(
-                    tooltip: 'Close ramp choices',
+                    tooltip: 'Close',
                     onPressed: () => Navigator.pop(context),
                     icon: const Icon(Icons.close),
                   ),

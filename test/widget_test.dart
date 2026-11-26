@@ -158,6 +158,13 @@ void main() {
     await tester.tap(find.byTooltip('Delete saved trip'));
     await tester.pumpAndSettle();
     expect(find.text('No saved trips yet'), findsOneWidget);
+    await tester.tap(find.text('Undo'));
+    await tester.pumpAndSettle();
+    expect(find.text('Route 267 → Westpark Drive'), findsOneWidget);
+    expect(prefs.getString('nova-toll-trips'), contains('Route 267'));
+    await tester.tap(find.byTooltip('Delete saved trip'));
+    await tester.pumpAndSettle();
+    expect(find.text('No saved trips yet'), findsOneWidget);
     expect(prefs.getString('nova-toll-trips'), '[]');
     expect(tester.takeException(), isNull);
     await tester.pumpWidget(const SizedBox.shrink());
